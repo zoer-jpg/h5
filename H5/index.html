@@ -1,0 +1,2979 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>石家河玉语</title>
+
+  <!-- ==================== Tailwind CSS CDN ==================== -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            /* 国风玉石配色系统 */
+            'jade-50':  '#f0f7f2',
+            'jade-100': '#d4ece0',
+            'jade-200': '#a8d9c4',
+            'jade-300': '#7cc5a8',
+            'jade-400': '#5ab894',
+            'jade-500': '#3da87a',
+            'jade-600': '#2d8a63',
+            'jade-700': '#1f6b4c',
+            'jade-800': '#145239',
+            'jade-900': '#0a3323',
+            /* 青白玉主色调 */
+            'jade-light': '#e8f0e3',
+            'jade-mid':   '#b8cfb0',
+            'jade-warm':  '#d4c9a8',
+            'jade-cream': '#f5f0e8',
+            /* 古铜/金 */
+            'bronze':     '#b8860b',
+            'bronze-dark':'#8b6508',
+            'gold-light': '#daa520',
+            /* 朱砂红 */
+            'cinnabar':   '#c04040',
+            'cinnabar-dark':'#8b2a2a',
+          },
+          fontFamily: {
+            'serif-cn': ['"Noto Serif SC"', '"Source Han Serif SC"', '"STSong"', 'serif'],
+            'sans-cn': ['"Noto Sans SC"', '"Source Han Sans SC"', '"PingFang SC"', 'sans-serif'],
+          },
+          animation: {
+            'float-slow': 'float 6s ease-in-out infinite',
+            'float-med':  'float 4s ease-in-out infinite',
+            'float-fast': 'float 3s ease-in-out infinite',
+            'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+            'shimmer':    'shimmer 2s linear infinite',
+            'fade-in':    'fadeIn 0.8s ease-out forwards',
+            'fade-out':   'fadeOut 0.5s ease-in forwards',
+            'slide-up':   'slideUp 0.6s ease-out forwards',
+            'slide-down': 'slideDown 0.4s ease-out forwards',
+            'phoenix-fly':'phoenixFly 3s ease-in-out forwards',
+            'rotate-slow':'rotate 20s linear infinite',
+            'bounce-in':  'bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards',
+            'sparkle':    'sparkle 1.5s ease-in-out infinite',
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ==================== 全局样式 ==================== */
+    * { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
+    html, body {
+      margin: 0; padding: 0;
+      width: 100vw; height: 100vh; height: 100dvh;
+      overflow: hidden;
+      font-family: 'Noto Serif SC', 'Source Han Serif SC', 'STSong', serif;
+      background: #0a1a0f;
+      touch-action: manipulation;
+    }
+    /* 允许滚动的容器 */
+    .scrollable { -webkit-user-select: auto; user-select: auto; }
+
+    /* ==================== 页面容器 ==================== */
+    .page {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; height: 100dvh;
+      opacity: 0; pointer-events: none; z-index: 1;
+      transform: translateY(16px);
+      transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .page.active {
+      opacity: 1; pointer-events: auto; z-index: 10;
+      transform: translateY(0);
+    }
+    .page.exit-forward {
+      opacity: 0; z-index: 5;
+      transform: translateY(-20px);
+      pointer-events: none;
+      transition: opacity 0.35s ease-in,
+                  transform 0.4s cubic-bezier(0.33, 0, 0.1, 1);
+    }
+    .page.exit-backward {
+      opacity: 0; z-index: 5;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: opacity 0.3s ease-in,
+                  transform 0.38s cubic-bezier(0.33, 0, 0.1, 1);
+    }
+    .page.exit-up {
+      opacity: 0; transform: translateY(-24px);
+      pointer-events: none;
+      transition: opacity 0.3s ease-in,
+                  transform 0.35s cubic-bezier(0.33, 0, 0.1, 1);
+    }
+
+    /* ==================== 转场闪白 ==================== */
+    .transition-flash {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; height: 100dvh;
+      z-index: 60; pointer-events: none;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%,
+        rgba(218,165,32,0.18), rgba(61,168,122,0.08), transparent);
+      opacity: 0;
+      transition: opacity 0.18s ease;
+    }
+    .transition-flash.peak { opacity: 1; transition: opacity 0s; }
+
+    /* ==================== 关键帧动画 ==================== */
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      33%  { transform: translateY(-12px) rotate(2deg); }
+      66%  { transform: translateY(-6px) rotate(-1deg); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 8px rgba(61,168,122,0.4); }
+      50%      { box-shadow: 0 0 24px rgba(61,168,122,0.8), 0 0 40px rgba(61,168,122,0.3); }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.8); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes phoenixFly {
+      0%   { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+      30%  { transform: translate(-20%, -30%) scale(1.2); opacity: 1; }
+      60%  { transform: translate(10%, -10%) scale(1); opacity: 1; }
+      100% { transform: translate(30%, 20%) scale(1.5); opacity: 0; }
+    }
+    @keyframes bounceIn {
+      0%   { opacity: 0; transform: scale(0.3); }
+      50%  { opacity: 1; transform: scale(1.08); }
+      70%  { transform: scale(0.95); }
+      100% { transform: scale(1); }
+    }
+    @keyframes sparkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50%      { opacity: 1; transform: scale(1.3); }
+    }
+    @keyframes jadeBeadFloat {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      25%  { transform: translateY(-15px) translateX(5px); }
+      50%  { transform: translateY(-5px) translateX(-5px); }
+      75%  { transform: translateY(-20px) translateX(3px); }
+    }
+    @keyframes phoenixGlow {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(218,165,32,0.4)); }
+      50%      { filter: drop-shadow(0 0 20px rgba(218,165,32,0.8)); }
+    }
+    @keyframes phoenixHover {
+      0%   { transform: rotate(0deg) translateY(0); }
+      25%  { transform: rotate(3deg) translateY(-8px); }
+      50%  { transform: rotate(-2deg) translateY(-4px); }
+      75%  { transform: rotate(2deg) translateY(-12px); }
+      100% { transform: rotate(0deg) translateY(0); }
+    }
+
+    /* === 新增交互动画 === */
+    /* 点击涟漪 */
+    @keyframes tapRipple {
+      0%   { width: 0; height: 0; opacity: 0.6; }
+      100% { width: 120px; height: 120px; opacity: 0; margin-left: -60px; margin-top: -60px; }
+    }
+    .tap-ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(218,165,32,0.4), transparent);
+      pointer-events: none;
+      animation: tapRipple 0.6s ease-out forwards;
+      z-index: 999;
+    }
+    /* 收集爆发 */
+    @keyframes collectBurst {
+      0%   { transform: scale(1); opacity: 1; }
+      50%  { transform: scale(2.5); opacity: 0.8; }
+      100% { transform: scale(3.5); opacity: 0; }
+    }
+    .collect-burst {
+      position: fixed;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(218,165,32,0.6), rgba(61,168,122,0.3), transparent);
+      pointer-events: none;
+      animation: collectBurst 0.8s ease-out forwards;
+      z-index: 300;
+    }
+    /* 数字跳动 */
+    @keyframes countPop {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.4); color: #daa520; }
+      100% { transform: scale(1); }
+    }
+    .count-pop { animation: countPop 0.4s ease-out; }
+    /* 标题发光 */
+    @keyframes titleGlow {
+      0%, 100% { text-shadow: 0 0 20px rgba(61,168,122,0.3); }
+      50%      { text-shadow: 0 0 40px rgba(61,168,122,0.6), 0 0 80px rgba(61,168,122,0.2); }
+    }
+    /* 闪烁入场 */
+    @keyframes glimmerIn {
+      0%   { opacity: 0; filter: brightness(2); }
+      60%  { opacity: 0.7; filter: brightness(1.2); }
+      100% { opacity: 1; filter: brightness(1); }
+    }
+    /* 碎片抖动 */
+    @keyframes pieceWiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25%  { transform: rotate(2deg); }
+      75%  { transform: rotate(-2deg); }
+    }
+    /* 玉粒收集飞行 */
+    @keyframes beadFlyAway {
+      0%   { transform: scale(1) translate(0, 0); opacity: 1; }
+      30%  { transform: scale(1.5) translate(10px, -30px); opacity: 0.8; }
+      100% { transform: scale(0) translate(50px, -100px); opacity: 0; }
+    }
+    /* 进度脉冲 */
+    @keyframes progressPulse {
+      0%, 100% { opacity: 0.5; }
+      50%      { opacity: 1; }
+    }
+    @keyframes puzzleComplete {
+      0%   { transform: scale(1); filter: brightness(1); }
+      50%  { transform: scale(1.05); filter: brightness(1.3); }
+      100% { transform: scale(1); filter: brightness(1); }
+    }
+    @keyframes ripple {
+      0%   { transform: scale(0); opacity: 0.6; }
+      100% { transform: scale(4); opacity: 0; }
+    }
+
+    /* ==================== 封面粒子漂浮 ==================== */
+    .jade-particle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(184,207,176,0.8), rgba(61,168,122,0.3));
+      pointer-events: none;
+      animation: jadeBeadFloat var(--dur) ease-in-out infinite;
+      animation-delay: var(--delay);
+    }
+
+    /* ==================== 滚动条隐藏 ==================== */
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ==================== 时间轴 ==================== */
+    .timeline-track {
+      position: relative;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .timeline-scene {
+      flex: 0 0 85vw;
+      scroll-snap-align: center;
+      position: relative;
+    }
+    .timeline-dot {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #3da87a;
+      box-shadow: 0 0 10px rgba(61,168,122,0.5);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .timeline-dot.active {
+      background: #daa520;
+      box-shadow: 0 0 20px rgba(218,165,32,0.8);
+      transform: scale(1.4);
+    }
+
+    /* ==================== 祭坛热点 ==================== */
+    .hotspot {
+      position: absolute;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(218,165,32,0.3);
+      border: 2px solid rgba(218,165,32,0.6);
+      animation: pulseGlow 2.5s ease-in-out infinite;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.3s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .hotspot:hover {
+      transform: scale(1.15);
+      background: rgba(218,165,32,0.5);
+    }
+    .hotspot:active {
+      transform: scale(0.9);
+      transition: all 0.1s ease;
+    }
+    .hotspot::after {
+      content: '';
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #daa520;
+      transition: all 0.3s ease;
+    }
+    .hotspot:hover::after { width: 16px; height: 16px; }
+    .hotspot.collected {
+      background: rgba(61,168,122,0.4);
+      border-color: rgba(61,168,122,0.8);
+      animation: none;
+      box-shadow: 0 0 15px rgba(61,168,122,0.5);
+    }
+    .hotspot .ripple-ring {
+      position: absolute;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      border: 1px solid rgba(218,165,32,0.4);
+      animation: ripple 2s ease-out infinite;
+    }
+
+    /* ==================== 拼图样式 ==================== */
+    .puzzle-board {
+      position: relative;
+      width: 90vw;
+      max-width: 380px;
+      background: #0d1a12;
+      border: 3px solid rgba(180,200,180,0.4);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    .puzzle-ref-img {
+      position: absolute; top: 0; left: 0;
+      z-index: 0; pointer-events: none;
+      display: block;
+      opacity: 0.4;
+    }
+    .puzzle-board.complete .puzzle-ref-img { opacity: 1 !important; transition: opacity 0.5s ease; }
+    .puzzle-board::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 2; pointer-events: none;
+      background-image:
+        repeating-linear-gradient(0deg,
+          rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px,
+          transparent 1px, transparent calc(100% / var(--rows, 3))),
+        repeating-linear-gradient(90deg,
+          rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px,
+          transparent 1px, transparent calc(100% / var(--cols, 2)));
+    }
+    .puzzle-board.complete {
+      border-color: rgba(218,165,32,0.6);
+      box-shadow: 0 0 30px rgba(218,165,32,0.4);
+    }
+    .puzzle-board.complete::before { opacity: 0; }
+
+    /* 碎片 */
+    .puzzle-piece {
+      position: relative;
+      cursor: grab;
+      box-sizing: border-box;
+      border-radius: 2px;
+      overflow: hidden;
+      touch-action: none;
+      flex-shrink: 0;
+    }
+    .puzzle-piece:active { cursor: grabbing; }
+    .puzzle-piece.snapped {
+      border: none !important;
+      outline: 1px solid rgba(0,0,0,0.2);
+      cursor: default;
+      pointer-events: none;
+      animation: snapFlash 0.35s ease-out;
+    }
+    @keyframes snapFlash {
+      0%   { filter: brightness(1.4); }
+      100% { filter: brightness(1); }
+    }
+    .puzzle-piece.dragging {
+      position: fixed !important;
+      z-index: 1000 !important;
+      border: 3px solid rgba(218,165,32,0.7) !important;
+      border-radius: 4px;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.55), 0 0 0 4px rgba(218,165,32,0.3);
+      opacity: 0.92;
+      pointer-events: none;
+    }
+    .puzzle-piece.picked { opacity: 0.1; pointer-events: none; }
+
+    /* 碎片池 */
+    .puzzle-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      align-items: flex-start;
+      align-content: flex-start;
+      padding: 8px;
+      min-height: 50px;
+      background: rgba(0,0,0,0.15);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .puzzle-pool .puzzle-piece {
+      border: 2px solid rgba(120,120,120,0.5);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+      border-radius: 3px;
+      transition: transform 0.1s;
+    }
+    .puzzle-pool .puzzle-piece:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.45); }
+    .puzzle-pool .puzzle-piece:active { transform: scale(0.96); }
+    .puzzle-pool .puzzle-piece.picked { opacity: 0.1; transform: none; box-shadow: none; }
+
+    .puzzle-counter {
+      display: flex; align-items: center; gap: 6px;
+      color: #d4c9a8; font-size: 13px;
+      font-family: 'Noto Serif SC', serif; letter-spacing: 1px;
+    }
+    .puzzle-counter .count-num { color: #daa520; font-size: 18px; font-weight: bold; }
+
+    /* ==================== 全景长卷 ==================== */
+    .panorama-track {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+    }
+    .panorama-inner {
+      display: flex; height: 100%; position: relative;
+    }
+    .panorama-section {
+      flex: 0 0 auto;
+      position: relative;
+    }
+
+    /* ==================== 弹窗/模态框 ==================== */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; height: 100dvh;
+      background: rgba(0,0,0,0.7);
+      z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.show {
+      opacity: 1; pointer-events: auto;
+    }
+    .modal-card {
+      background: linear-gradient(135deg, #1a3a2a 0%, #0f2418 100%);
+      border: 1px solid rgba(184,207,176,0.3);
+      border-radius: 16px;
+      padding: 24px 20px;
+      width: 85vw; max-width: 360px;
+      max-height: 75vh;
+      overflow-y: auto;
+      color: #d4ece0;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      transform: translateY(20px);
+      transition: transform 0.4s ease;
+    }
+    .modal-overlay.show .modal-card {
+      transform: translateY(0);
+    }
+
+    /* ==================== DIY面板 ==================== */
+    .diy-panel {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(0deg, #0f2418 0%, #1a3a2a 100%);
+      border-top: 2px solid rgba(184,207,176,0.3);
+      border-radius: 20px 20px 0 0;
+      z-index: 90;
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 16px;
+      max-height: 55vh;
+      overflow-y: auto;
+    }
+    .diy-panel.show { transform: translateY(0); }
+    .diy-pattern-option {
+      width: 56px; height: 56px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      /* 纹样占位 */
+      background: #3a5a40;
+    }
+    .diy-pattern-option.selected {
+      border-color: #daa520;
+      box-shadow: 0 0 12px rgba(218,165,32,0.5);
+    }
+
+    /* ==================== 图鉴卡片 ==================== */
+    .album-card {
+      width: 70px; height: 90px;
+      border-radius: 10px;
+      border: 2px solid rgba(184,207,176,0.2);
+      background: rgba(255,255,255,0.03);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .album-card.unlocked {
+      border-color: rgba(61,168,122,0.6);
+      background: rgba(61,168,122,0.1);
+    }
+    .album-card.unlocked::after {
+      content: '✓';
+      position: absolute; top: 4px; right: 6px;
+      color: #3da87a; font-size: 12px;
+    }
+
+    /* ==================== 玉粒收集提示 ==================== */
+    .bead-indicator {
+      position: fixed; top: 16px; right: 16px;
+      z-index: 80;
+      background: rgba(10,26,15,0.8);
+      border: 1px solid rgba(184,207,176,0.4);
+      border-radius: 20px;
+      padding: 6px 14px;
+      display: flex; align-items: center; gap: 6px;
+      color: #d4ece0;
+      font-size: 13px;
+      backdrop-filter: blur(8px);
+    }
+    .bead-collect-toast {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: rgba(10,26,15,0.9);
+      border: 1px solid rgba(218,165,32,0.6);
+      border-radius: 16px;
+      padding: 16px 24px;
+      color: #daa520;
+      z-index: 200;
+      font-size: 16px;
+      text-align: center;
+      transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      pointer-events: none;
+    }
+    .bead-collect-toast.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* ==================== 进度条 ==================== */
+    .progress-bar-track {
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3da87a, #daa520);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    /* ==================== 难度选择按钮 ==================== */
+    .diff-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(184,207,176,0.3);
+      background: rgba(255,255,255,0.05);
+      color: #b8cfb0;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    .diff-btn.active {
+      background: rgba(61,168,122,0.3);
+      border-color: #3da87a;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(61,168,122,0.3);
+    }
+    .diff-btn.locked {
+      background: rgba(0,0,0,0.3);
+      border-color: rgba(100,100,100,0.3);
+      color: #666;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    .diff-btn.locked:hover {
+      background: rgba(0,0,0,0.3);
+      transform: none;
+    }
+
+    /* ==================== 祭坛中心布局 ==================== */
+    .altar-bg {
+      position: relative;
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ==================== 全景热点 ==================== */
+    .panorama-hotspot {
+      position: absolute;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(218,165,32,0.3);
+      border: 1.5px solid rgba(218,165,32,0.7);
+      cursor: pointer;
+      animation: sparkle 2s ease-in-out infinite;
+      z-index: 10;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .panorama-hotspot::after {
+      content: '?';
+      color: #daa520;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* ==================== 分享卡片 ==================== */
+    .share-card {
+      background: linear-gradient(135deg, #1a3a2a, #0f2418);
+      border: 2px solid rgba(184,207,176,0.3);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      color: #d4ece0;
+    }
+
+    /* ==================== 按钮通用样式 ==================== */
+    .btn-jade {
+      background: linear-gradient(135deg, #3da87a, #2d8a63);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 12px 32px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(61,168,122,0.3);
+      font-family: inherit;
+      position: relative; overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-jade:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(61,168,122,0.4);
+    }
+    .btn-jade:active {
+      transform: scale(0.95);
+      box-shadow: 0 2px 6px rgba(61,168,122,0.15);
+      transition: all 0.1s ease;
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, #daa520, #b8860b);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 12px 32px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(218,165,32,0.3);
+      font-family: inherit;
+      position: relative; overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-gold:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(218,165,32,0.4);
+    }
+    .btn-gold:active {
+      transform: scale(0.95);
+      transition: all 0.1s ease;
+    }
+
+    /* ==================== 关闭按钮 ==================== */
+    .close-btn {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .close-btn:active { background: rgba(255,255,255,0.2); }
+
+    /* ==================== 响应式微调 ==================== */
+    @media (min-width: 420px) {
+      .modal-card { max-width: 380px; }
+    }
+    @media (max-height: 700px) {
+      .puzzle-board { max-height: 280px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ================================================================== -->
+<!--                       全局玉粒收集指示器                              -->
+<!-- ================================================================== -->
+<div id="bead-indicator" class="bead-indicator" style="display:none;">
+  <!-- 图片占位：【小玉粒图标+全局UI+assets/images/ui/】 -->
+  <span style="font-size:16px;">🟢</span>
+  <span id="bead-count">0/10</span>
+</div>
+
+<!-- ================================================================== -->
+<!--                       玉粒收集弹窗提示                                -->
+<!-- ================================================================== -->
+<div id="bead-toast" class="bead-collect-toast">
+  <div style="font-size:28px; margin-bottom:4px;">🟢</div>
+  <div>发现一枚小玉粒！</div>
+  <div style="font-size:12px; color:#b8cfb0;" id="bead-toast-detail"></div>
+</div>
+
+<!-- ================================================================== -->
+<!--                       全局弹窗层（科普/图鉴等）                        -->
+<!-- ================================================================== -->
+<div id="modal-overlay" class="modal-overlay" onclick="closeModal(event)">
+  <div class="modal-card" id="modal-card" onclick="event.stopPropagation()">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 id="modal-title" style="color:#daa520; font-size:18px; margin:0;"></h3>
+      <button class="close-btn" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div id="modal-body" style="font-size:14px; line-height:1.8;"></div>
+    <!-- 图片占位区域 -->
+    <div id="modal-image" style="margin-top:12px; display:none;"></div>
+  </div>
+</div>
+
+<!-- ================================================================== -->
+<!--                       DIY纹样换装面板                                 -->
+<!-- ================================================================== -->
+<div id="diy-panel" class="diy-panel">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+    <h3 style="color:#daa520; font-size:16px; margin:0;">🎨 DIY纹样换装</h3>
+    <button class="close-btn" onclick="toggleDIYPanel()">✕</button>
+  </div>
+  <p style="color:#b8cfb0; font-size:12px; margin-bottom:8px;">选择纹样：</p>
+  <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:8px;" id="diy-patterns">
+    <!-- JS动态生成纹样选项 -->
+  </div>
+  <p style="color:#b8cfb0; font-size:12px; margin:10px 0 6px;">选择玉器底版：</p>
+  <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:8px;" id="diy-bases">
+    <!-- JS动态生成底版选项 -->
+  </div>
+  <div style="display:flex; gap:10px; margin-top:16px;">
+    <button class="btn-jade" style="flex:1; font-size:14px; padding:10px;" onclick="saveDIYImage()">💾 保存图片</button>
+    <button class="btn-gold" style="flex:1; font-size:14px; padding:10px;" onclick="shareDIYImage()">📤 分享</button>
+  </div>
+  <p style="color:#7a9a85; font-size:11px; text-align:center; margin-top:8px;">保存/分享功能将在部署后启用</p>
+</div>
+
+<!-- ================================================================== -->
+<!--                       全屏短片播放框架                                -->
+<!-- ================================================================== -->
+<div id="video-overlay" style="position:fixed; top:0; left:0; width:100vw; height:100vh; height:100dvh; background:rgba(0,0,0,0.92); z-index:300; display:none; flex-direction:column; align-items:center; justify-content:center;">
+  <!-- 顶部栏 -->
+  <div style="position:absolute; top:0; left:0; right:0; z-index:10; display:flex; justify-content:space-between; align-items:center; padding:16px 20px;
+    background:linear-gradient(180deg, rgba(0,0,0,0.7) 0%, transparent 100%);">
+    <span style="color:#daa520; font-size:16px; letter-spacing:2px;">文物视频介绍 · 石家河遗址</span>
+    <button style="width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; font-size:18px; cursor:pointer; -webkit-tap-highlight-color:transparent;" onclick="closeVideo()">✕</button>
+  </div>
+  <!-- B站播放器 -->
+  <iframe id="video-iframe" style="width:100vw; height:56.25vw; max-height:60vh; border:none;"
+    src="" allowfullscreen="true" allow="autoplay; fullscreen; encrypted-media"
+    referrerpolicy="no-referrer" loading="lazy"></iframe>
+</div>
+
+
+<!-- ================================================================== -->
+<!--                       分享海报弹窗                                    -->
+<!-- ================================================================== -->
+<div id="share-poster-overlay" style="position:fixed; top:0; left:0; width:100vw; height:100vh; height:100dvh;
+  background:rgba(0,0,0,0.88); z-index:400; display:none; flex-direction:column; align-items:center; justify-content:flex-start;
+  overflow-y:auto; padding:20px 0;">
+  <!-- 顶部栏 -->
+  <div style="width:90vw; max-width:360px; display:flex; justify-content:space-between; align-items:center;
+    padding:12px 0; flex-shrink:0;">
+    <span style="color:#daa520; font-size:16px; letter-spacing:2px;">📜 探索成果海报</span>
+    <button style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.15);
+      border:1px solid rgba(255,255,255,0.3); color:#fff; font-size:16px; cursor:pointer;"
+      onclick="closeSharePoster()">✕</button>
+  </div>
+  <!-- 海报图片 -->
+  <div style="width:90vw; max-width:360px; border-radius:12px; overflow:hidden;
+    border:2px solid rgba(184,207,176,0.25); box-shadow:0 8px 40px rgba(0,0,0,0.5); flex-shrink:0;">
+    <img id="share-poster-img" src="" alt="探索成果海报" style="width:100%; display:block;" />
+  </div>
+  <!-- 操作按钮 -->
+  <div style="display:flex; gap:12px; margin-top:16px; flex-shrink:0;">
+    <button class="btn-gold" style="font-size:14px; padding:10px 24px;" onclick="saveSharePoster()">💾 保存海报</button>
+    <button class="btn-jade" style="font-size:14px; padding:10px 24px;" onclick="closeSharePoster()">返回</button>
+  </div>
+  <p style="color:#5a7a65; font-size:11px; margin-top:10px;">长按海报可保存或分享给朋友</p>
+</div>
+
+
+<!-- ================================================================== -->
+<!--  第1页：封面首页                                                      -->
+<!-- ================================================================== -->
+<section id="page-cover" class="page active" style="overflow:hidden;">
+
+  <!-- 背景层：封面大图 + 青白玉色调叠加 -->
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:0;
+    background: linear-gradient(180deg, #0a1a0f 0%, #0f2418 30%, #1a3a2a 60%, #0f2418 100%);">
+    <!-- 封面背景大图 -->
+    <img src="assets/images/cover/cover_bg.jpg"
+         alt="石家河玉语封面背景"
+         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; opacity:0.55;"
+         onerror="this.style.display='none';" />
+    <!-- 上层渐变遮罩：保持青白玉主色调 -->
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%;
+      background: linear-gradient(180deg,
+        rgba(10,26,15,0.55) 0%,
+        rgba(15,36,24,0.35) 30%,
+        rgba(26,58,42,0.25) 60%,
+        rgba(10,26,15,0.5) 100%);">
+    </div>
+  </div>
+
+  <!-- 漂浮小玉粒（封面页：玉粒#1） -->
+  <div id="bead-cover" class="jade-particle"
+       style="top:22%; left:18%; width:28px; height:28px; cursor:pointer; pointer-events:auto; z-index:5;"
+       data-bead="1" onclick="collectBead(event, 1, '封面页·浮光隐现')">
+    <!-- 图片占位：【小玉粒发光素材+assets/images/beads/bead_glow.png】 -->
+    <span style="font-size:18px; display:flex; align-items:center; justify-content:center; width:100%; height:100%;">🟢</span>
+  </div>
+
+  <!-- 装饰粒子层 -->
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; pointer-events:none;" id="cover-particles">
+    <!-- JS动态生成 -->
+  </div>
+
+  <!-- 主标题区 -->
+  <div style="position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center; padding:20px;">
+
+    <!-- 标题 -->
+    <h1 style="color:#d4ece0; font-size:36px; font-weight:bold; margin:12px 0 4px;
+      text-shadow: 0 0 30px rgba(61,168,122,0.4); letter-spacing:8px; animation:titleGlow 3s ease-in-out infinite;">
+      石家河玉语
+    </h1>
+    <p style="color:#7cc5a8; font-size:13px; letter-spacing:4px; margin-bottom:8px; animation:fadeIn 1s ease-out 0.3s both;">
+      探索千年玉文化之旅
+    </p>
+
+    <!-- 装饰分割线 -->
+    <div style="width:60px; height:1px; background:linear-gradient(90deg, transparent, #b8cfb0, transparent); margin:16px 0; animation:fadeInScale 0.6s ease-out 0.5s both;"></div>
+
+    <!-- 副标题 -->
+    <p style="color:#8ab89a; font-size:12px; max-width:260px; line-height:1.8; animation:fadeIn 1s ease-out 0.6s both;">
+      石家河遗址 · 距今约4500年<br/>长江中游璀璨的史前玉器文明
+    </p>
+
+    <!-- 开始按钮 -->
+    <button class="btn-jade" style="margin-top:40px; font-size:18px; padding:14px 48px; letter-spacing:4px; animation:bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.8s both;"
+      onclick="navigateTo('page-prologue')">
+      开 始 探 索
+    </button>
+
+    <!-- 底部提示 -->
+    <p style="color:#5a7a65; font-size:11px; margin-top:20px; animation:fadeIn 1s ease-out 1s both;">轻触屏幕 · 开启时空之门</p>
+  </div>
+
+</section>
+
+
+<!-- ================================================================== -->
+<!--  第2页：序章加载页                                                    -->
+<!-- ================================================================== -->
+<section id="page-prologue" class="page">
+
+  <!-- 背景：星空图片 + 暗色渐变遮罩 -->
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:0;">
+    <!-- 序章星空背景图 -->
+    <img src="assets/images/prologue/starry_bg.png"
+         alt="序章星空背景"
+         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;"
+         onerror="this.style.display='none';" />
+    <!-- 暗色渐变遮罩：保持文字可读性 -->
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%;
+      background: linear-gradient(180deg,
+        rgba(6,14,10,0.65) 0%,
+        rgba(10,26,15,0.4) 40%,
+        rgba(15,36,24,0.35) 70%,
+        rgba(6,14,10,0.55) 100%);">
+    </div>
+  </div>
+
+  <!-- 中心玉凤 -->
+  <div style="position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center; padding:20px;">
+
+    <!-- 玉团凤（点击跳转） -->
+    <div id="prologue-phoenix"
+         style="width:200px; height:200px; cursor:pointer;
+         display:flex; align-items:center; justify-content:center;
+         margin-bottom:20px; position:relative;"
+         onclick="navigateTo('page-timeline')">
+      <!-- 凤鸟 PNG 图片带旋转动效 -->
+      <img src="assets/images/prologue/凤鸟1.png"
+           alt="凤鸟"
+           style="width:100%; height:100%; object-fit:contain;
+           filter: drop-shadow(0 0 20px rgba(218,165,32,0.4)) brightness(0.88) saturate(0.8);
+           animation: phoenixHover 8s ease-in-out infinite;
+           position: relative; left: -15px;"
+           onerror="this.style.display='none';" />
+      <!-- 色调融合叠加层：青白玉色氛围 -->
+      <div style="position:absolute; top:0; left:0; width:100%; height:100%;
+        background: radial-gradient(ellipse at center,
+          transparent 45%,
+          rgba(15,36,24,0.2) 70%,
+          rgba(10,26,15,0.4) 100%);
+        pointer-events:none; border-radius:50%;"></div>
+    </div>
+
+    <!-- 叙述文字 -->
+    <div style="animation: fadeIn 1.5s ease-out 0.3s both; max-width:280px;">
+      <p style="color:#d4c9a8; font-size:15px; line-height:2; letter-spacing:2px;">
+        沉睡四千五百年的玉魂<br/>
+        在凤鸣声中缓缓苏醒
+      </p>
+      <p style="color:#7a9a85; font-size:12px; line-height:1.8; margin-top:16px;">
+        石家河的先民以玉通神<br/>
+        将天地的灵气凝于方寸之间
+      </p>
+    </div>
+
+    <!-- 点击提示 -->
+    <p style="color:#5a7a65; font-size:12px; margin-top:32px; animation: sparkle 2s ease-in-out infinite;">
+      ✦ 轻触玉凤 · 开启旅程 ✦
+    </p>
+
+    <!-- 玉粒#2 -->
+    <div id="bead-prologue" class="jade-particle"
+         style="bottom:18%; right:20%; width:24px; height:24px; cursor:pointer; pointer-events:auto; z-index:5;"
+         data-bead="2" onclick="collectBead(event, 2, '序章·星辉玉影')">
+      <span style="font-size:16px;">🟢</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================== -->
+<!--  第3页：交互1 - 横向滚动时间轴                                        -->
+<!-- ================================================================== -->
+<section id="page-timeline" class="page">
+
+  <!-- 背景：岁月长河图片 + 暗色渐变遮罩 -->
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:0;">
+    <img src="assets/images/timeline/timeline_bg.png"
+         alt="岁月长河背景"
+         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;"
+         onerror="this.style.display='none';" />
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%;
+      background: linear-gradient(180deg,
+        rgba(15,36,24,0.7) 0%,
+        rgba(26,58,42,0.4) 50%,
+        rgba(15,36,24,0.65) 100%);">
+    </div>
+  </div>
+
+  <!-- 页面标题 -->
+  <div style="position:relative; z-index:2; text-align:center; padding-top:40px;">
+    <h2 style="color:#daa520; font-size:22px; letter-spacing:6px; margin:0;">岁月长河</h2>
+    <p style="color:#7cc5a8; font-size:12px; margin-top:4px;">左右滑动 · 追溯石家河千年</p>
+  </div>
+
+  <!-- 6个时间场景容器 -->
+  <div style="position:relative; z-index:2; height:calc(100% - 150px); overflow:hidden; margin-top:10px;">
+
+    <!-- 场景插画滚动区 -->
+    <div id="timeline-scroll" class="timeline-track scrollbar-hide"
+         style="height:65%; padding:0 7.5vw;"
+         onscroll="updateTimelineProgress()">
+
+      <!-- 场景1：远古曙光 -->
+      <div class="timeline-scene" data-scene="1">
+        <div style="width:100%; height:100%; border-radius:16px;
+          background:linear-gradient(135deg, #1a2a1f, #2a3a2f);
+          display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+                  <img src="assets/images/timeline/scene_01_dawn.png" 
+               style="width:100%; height:100%; object-fit:cover; border-radius:16px;" 
+               alt="远古曙光插画">
+        </div>
+      </div>
+
+      <!-- 场景2：先民琢玉 -->
+      <div class="timeline-scene" data-scene="2">
+        <div style="width:100%; height:100%; border-radius:16px;
+          background:linear-gradient(135deg, #1a2a1f, #2a3a2f);
+          display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+          <img src="assets/images/timeline/scene_02_carving.png"
+               style="width:100%; height:100%; object-fit:cover; border-radius:16px;"
+               alt="先民琢玉插画"
+               onerror="this.style.display='none';">
+        </div>
+      </div>
+
+      <!-- 场景3：通灵祭典 -->
+      <div class="timeline-scene" data-scene="3">
+        <div style="width:100%; height:100%; border-radius:16px;
+          background:linear-gradient(135deg, #1a2a1f, #2a3a2f);
+          display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+          <img src="assets/images/timeline/scene_03_ritual.png"
+               style="width:100%; height:100%; object-fit:cover; border-radius:16px;"
+               alt="通灵祭典插画"
+               onerror="this.style.display='none';">
+        </div>
+      </div>
+
+      <!-- 场景4：玉器巅峰 -->
+      <div class="timeline-scene" data-scene="4">
+        <div style="width:100%; height:100%; border-radius:16px;
+          background:linear-gradient(135deg, #1a2a1f, #2a3a2f);
+          display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+          <img src="assets/images/timeline/scene_04_peak.png"
+               style="width:100%; height:100%; object-fit:cover; border-radius:16px;"
+               alt="玉器巅峰插画"
+               onerror="this.style.display='none';">
+        </div>
+      </div>
+
+      <!-- 场景5：文明交融 -->
+      <div class="timeline-scene" data-scene="5">
+        <div style="width:100%; height:100%; border-radius:16px;
+          background:linear-gradient(135deg, #1a2a1f, #2a3a2f);
+          display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+          <img src="assets/images/timeline/scene_05_exchange.png"
+               style="width:100%; height:100%; object-fit:cover; border-radius:16px;"
+               alt="文明交融插画"
+               onerror="this.style.display='none';">
+        </div>
+      </div>
+
+      <!-- 场景6：玉魂永存 -->
+      <div class="timeline-scene" data-scene="6">
+        <div style="width:100%; height:100%; border-radius:16px;
+          background:linear-gradient(135deg, #1a2a1f, #2a3a2f);
+          display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+          <img src="assets/images/timeline/scene_06_eternal.png"
+               style="width:100%; height:100%; object-fit:cover; border-radius:16px;"
+               alt="玉魂永存插画"
+               onerror="this.style.display='none';">
+        </div>
+      </div>
+    </div>
+
+    <!-- 时间轴光点指示器 -->
+    <div style="display:flex; justify-content:center; gap:20px; margin-top:16px;" id="timeline-dots">
+      <div class="timeline-dot active" data-dot="1" onclick="scrollToScene(1)"></div>
+      <div class="timeline-dot" data-dot="2" onclick="scrollToScene(2)"></div>
+      <div class="timeline-dot" data-dot="3" onclick="scrollToScene(3)"></div>
+      <div class="timeline-dot" data-dot="4" onclick="scrollToScene(4)"></div>
+      <div class="timeline-dot" data-dot="5" onclick="scrollToScene(5)"></div>
+      <div class="timeline-dot" data-dot="6" onclick="scrollToScene(6)"></div>
+    </div>
+
+    <!-- 场景年份标签 -->
+    <div style="display:flex; justify-content:center; gap:20px; margin-top:4px;" id="timeline-labels">
+      <span style="font-size:10px; color:#7a9a85; width:16px; text-align:center;">约前2600</span>
+      <span style="font-size:10px; color:#7a9a85; width:16px; text-align:center;">约前2500</span>
+      <span style="font-size:10px; color:#7a9a85; width:16px; text-align:center;">约前2400</span>
+      <span style="font-size:10px; color:#7a9a85; width:16px; text-align:center;">约前2300</span>
+      <span style="font-size:10px; color:#7a9a85; width:16px; text-align:center;">约前2200</span>
+      <span style="font-size:10px; color:#7a9a85; width:16px; text-align:center;">约前2100</span>
+    </div>
+
+    <!-- 底部进度条 -->
+    <div style="padding:0 10vw; margin-top:12px;">
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="timeline-progress" style="width:0%;"></div>
+      </div>
+    </div>
+
+    <!-- 下一环节按钮 -->
+    <div style="text-align:center; margin-top:16px; padding-bottom:20px;">
+      <button class="btn-jade" style="font-size:14px; padding:10px 28px;" onclick="navigateTo('page-altar')">
+        进入祭坛 →
+      </button>
+    </div>
+  </div>
+
+  <!-- 玉粒 #3（时间轴页面） -->
+  <div id="bead-timeline-1" style="position:absolute; bottom:28%; left:10%; z-index:5; cursor:pointer;"
+       data-bead="3" onclick="collectBead(event, 3, '时间轴·远古回响')">
+    <span style="font-size:16px;">🟢</span>
+  </div>
+
+  <!-- 玉粒 #4（时间轴页面） -->
+  <div id="bead-timeline-2" style="position:absolute; top:20%; right:8%; z-index:5; cursor:pointer;"
+       data-bead="4" onclick="collectBead(event, 4, '时间轴·千年凝光')">
+    <span style="font-size:16px;">🟢</span>
+  </div>
+
+</section>
+
+
+<!-- ================================================================== -->
+<!--  第4页：交互2 - 文物祭坛（热点点击）                                   -->
+<!-- ================================================================== -->
+<section id="page-altar" class="page">
+
+  <!-- 背景：祭坛图片 + 暗色遮罩 -->
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:0;">
+    <img src="assets/images/altar/altar_center.jpg"
+         alt="文物祭坛背景"
+         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;"
+         onerror="this.style.display='none';" />
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%;
+      background: rgba(10,18,14,0.55);">
+    </div>
+  </div>
+
+  <!-- 标题 -->
+  <div style="position:relative; z-index:2; text-align:center; padding-top:30px;">
+    <h2 style="color:#daa520; font-size:22px; letter-spacing:6px; margin:0;">文物祭坛</h2>
+    <p style="color:#7cc5a8; font-size:12px; margin-top:4px;">轻触光点 · 唤醒沉睡的玉器</p>
+  </div>
+
+  <!-- 祭坛区域 -->
+  <div class="altar-bg" style="position:relative; z-index:2; height:calc(100% - 160px);">
+
+    <!-- 热点1：玉凤 -->
+    <div class="hotspot" style="top:15%; left:25%;"
+         data-artifact="1" data-name="玉凤" data-era="石家河文化中期"
+         data-desc="玉凤是石家河文化标志性国宝，素有中华第一凤的美称。整件玉器运用精湛镂空透雕技法雕琢，整体盘曲飘逸、线条婉转柔美。在先民原始信仰里，凤鸟是沟通天地人神的通灵神使，承担祭祀通灵之用，更是荆楚大地绵延千年凤图腾文化最早的历史源头。"
+         onclick="openArtifactInfo(this)">
+      <div class="ripple-ring"></div>
+    </div>
+
+    <!-- 热点2：玉虎 -->
+    <div class="hotspot" style="top:12%; right:22%;"
+         data-artifact="2" data-name="玉虎" data-era="石家河文化晚期"
+         data-desc="玉虎是石家河文化晚期经典动物形玉器，整体体态矫健威猛，雕琢线条简练古朴，写实韵味十足。在先民信仰中，猛虎是勇武力量的象征，常作为祭祀礼器，扮演城池与族群的守护神，寄托着先民驱邪避凶、祈求安稳护佑的美好心愿。"
+         onclick="openArtifactInfo(this)">
+      <div class="ripple-ring" style="animation-delay:0.5s;"></div>
+    </div>
+
+    <!-- 热点3：神人面 -->
+    <div class="hotspot" style="bottom:22%; left:18%;"
+         data-artifact="3" data-name="神人面" data-era="石家河文化中期"
+         data-desc="神人面玉器是石家河文化极具神秘气息的礼器，面部纹路雕琢繁复规整，神态威严肃穆。它塑造出先民心中的神明样貌，多用于大型巫术祭祀与先祖祭拜仪式，是当时神权体系的具象体现，直观展现了史前先民原始浓厚的宗教信仰观念。"
+         onclick="openArtifactInfo(this)">
+      <div class="ripple-ring" style="animation-delay:1s;"></div>
+    </div>
+
+    <!-- 热点4：玉琮 -->
+    <div class="hotspot" style="bottom:20%; right:18%;"
+         data-artifact="4" data-name="玉琮" data-era="石家河文化晚期"
+         data-desc="玉琮形制外方内圆，对应古人天圆地方的宇宙理念，是专门用来祭祀天地的重要礼器。石家河玉琮形制规整庄重，纹饰简约古朴，属于长江流域史前玉琮典型器物。它不仅承载先民朴素的宇宙认知，也印证了石家河与良渚两大古文明之间的文化交流。"
+         onclick="openArtifactInfo(this)">
+      <div class="ripple-ring" style="animation-delay:1.5s;"></div>
+    </div>
+
+    <!-- 热点5：陶塑 -->
+    <div class="hotspot" style="top:50%; left:50%; transform:translate(-50%,-50%);"
+         data-artifact="5" data-name="陶塑动物" data-era="石家河文化早期"
+         data-desc="石家河邓家湾遗址出土大批小型史前陶塑鸟兽，造型质朴稚拙、灵动传神，尽显先民细致入微的自然观察力。它们多为日常家禽与野兽形象，直观反映了当时畜牧养殖业水平，是还原远古百姓日常起居、窥探史前世俗生活最鲜活的实物史料。"
+         onclick="openArtifactInfo(this)">
+      <div class="ripple-ring" style="animation-delay:0.8s;"></div>
+    </div>
+
+    <!-- 玉粒 #5 -->
+    <div id="bead-altar-1" style="position:absolute; top:28%; left:8%; z-index:5; cursor:pointer;"
+         data-bead="5" onclick="collectBead(event, 5, '祭坛·灵光一闪')">
+      <span style="font-size:16px;">🟢</span>
+    </div>
+
+    <!-- 玉粒 #6 -->
+    <div id="bead-altar-2" style="position:absolute; bottom:30%; right:8%; z-index:5; cursor:pointer;"
+         data-bead="6" onclick="collectBead(event, 6, '祭坛·暗香浮动')">
+      <span style="font-size:16px;">🟢</span>
+    </div>
+  </div>
+
+  <!-- 底部工具栏 -->
+  <div style="position:relative; z-index:3; display:flex; justify-content:center; gap:16px; padding:12px 20px;">
+    <button class="btn-jade" style="font-size:13px; padding:8px 20px;" onclick="openAlbum()">
+      📖 图鉴 (<span id="album-count">0</span>/5)
+    </button>
+    <button class="btn-jade" style="font-size:13px; padding:8px 20px;" onclick="navigateTo('page-puzzle')">
+      进入工坊 →
+    </button>
+  </div>
+</section>
+
+
+<section id="page-puzzle" class="page" style="display:flex; flex-direction:column;">
+
+  <!-- 背景 -->
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:0;">
+    <img src="assets/images/puzzle/puzzle_bg.jpg" alt=""
+         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;"
+         onerror="this.style.display='none';" />
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%; background: rgba(10,22,14,0.6);"></div>
+  </div>
+
+  <!-- 标题 -->
+  <div style="position:relative; z-index:2; text-align:center; padding-top:14px; flex-shrink:0;">
+    <h2 style="color:#daa520; font-size:20px; letter-spacing:6px; margin:0;">拼图工坊</h2>
+    <p style="color:#7cc5a8; font-size:12px; margin-top:2px;">拖拽碎片 · 复原千年文物</p>
+  </div>
+
+  <!-- 难度选择 -->
+  <div style="position:relative; z-index:2; display:flex; justify-content:flex-start; gap:8px;
+    padding:6px 16px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; flex-shrink:0;"
+    id="diff-selector" class="scrollbar-hide">
+    <button class="diff-btn active" data-diff="1" onclick="selectDifficulty(1)">陶塑动物 6块</button>
+    <button class="diff-btn locked" data-diff="2" data-locked="1" onclick="selectDifficulty(2)">🔒 神人面 10块</button>
+    <button class="diff-btn locked" data-diff="3" data-locked="1" onclick="selectDifficulty(3)">🔒 玉虎 15块</button>
+    <button class="diff-btn locked" data-diff="4" data-locked="1" onclick="selectDifficulty(4)">🔒 玉琮 15块</button>
+    <button class="diff-btn locked" data-diff="5" data-locked="1" onclick="selectDifficulty(5)">🔒 玉凤 20块</button>
+  </div>
+
+  <!-- 可滚动内容区 -->
+  <div style="position:relative; z-index:2; display:flex; flex-direction:column; align-items:center;
+    padding:0 16px 24px; flex:1; overflow-y:auto; overflow-x:hidden; min-height:0;">
+
+    <!-- 拼图底板 -->
+    <div id="puzzle-board" class="puzzle-board" style="flex-shrink:0;">
+      <img id="puzzle-ref-img" class="puzzle-ref-img" alt="参考" />
+    </div>
+
+    <!-- 进度 -->
+    <div style="display:flex; justify-content:center; align-items:center; margin-top:8px; flex-shrink:0;">
+      <div class="puzzle-counter">
+        <span>已放置：</span><span class="count-num" id="puzzle-placed-count">0</span>
+        <span> / <span id="puzzle-total-count">6</span> 块</span>
+      </div>
+    </div>
+
+    <!-- 碎片池 -->
+    <div id="puzzle-pool" class="puzzle-pool scrollbar-hide"
+         style="width:90vw; max-width:420px; max-height:180px; overflow-y:auto; overflow-x:hidden; margin-top:8px; flex-shrink:0;">
+      <p id="puzzle-pool-hint" style="color:#5a7a65; font-size:12px; width:100%; text-align:center; margin:8px 0;">碎片将在此处随机排列</p>
+    </div>
+
+    <!-- 按钮 -->
+    <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; justify-content:center; flex-shrink:0;">
+      <button class="btn-jade" style="font-size:12px; padding:8px 16px;" onclick="resetPuzzle()">🔄 打乱重来</button>
+      <button class="btn-gold" style="font-size:12px; padding:8px 16px;" onclick="toggleDIYPanel()">🎨 DIY换装</button>
+      <button class="btn-jade" style="font-size:12px; padding:8px 16px;" onclick="navigateTo('page-panorama')">进入长卷 →</button>
+    </div>
+  </div>
+
+  <!-- 完成动画 -->
+  <div id="puzzle-complete-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%;
+    z-index:15; display:none; flex-direction:column; align-items:center; justify-content:center;
+    background:rgba(0,0,0,0.7); pointer-events:none;">
+    <div style="animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; text-align:center;">
+      <div style="font-size:56px; margin-bottom:8px;">✨</div>
+      <p style="color:#daa520; font-size:22px; letter-spacing:6px; margin:0;">复原成功</p>
+      <p style="color:#b8cfb0; font-size:14px; margin-top:6px;" id="puzzle-complete-name"></p>
+    </div>
+  </div>
+
+  <!-- 玉粒 -->
+  <div id="bead-puzzle-1" style="position:absolute; top:18%; left:6%; z-index:5; cursor:pointer;"
+       data-bead="7" onclick="collectBead(event, 7, '工坊·巧手琢玉')"><span style="font-size:16px;">🟢</span></div>
+  <div id="bead-puzzle-2" style="position:absolute; bottom:22%; right:6%; z-index:5; cursor:pointer;"
+       data-bead="8" onclick="collectBead(event, 8, '工坊·匠心独运')"><span style="font-size:16px;">🟢</span></div>
+</section><!-- ================================================================== -->
+<section id="page-panorama" class="page" style="display:flex; flex-direction:column;">
+
+  <!-- 背景 -->
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:0;">
+    <img src="assets/images/panorama/panorama_bg.jpg" alt="全景长卷背景"
+         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;"
+         onerror="this.style.display='none';" />
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%;
+      background: rgba(10,18,14,0.45);"></div>
+  </div>
+
+  <!-- 标题 -->
+  <div style="position:relative; z-index:2; text-align:center; padding-top:20px; flex-shrink:0;">
+    <h2 style="color:#daa520; font-size:20px; letter-spacing:6px; margin:0;">全景长卷</h2>
+    <p style="color:#7cc5a8; font-size:12px; margin-top:2px;">徐徐展开 · 石家河文明画卷</p>
+  </div>
+
+  <!-- 长卷滚动区域 -->
+  <div id="panorama-scroll" class="panorama-track scrollbar-hide"
+       style="position:relative; z-index:2; flex:1; min-height:0; overflow-y:hidden;"
+       onscroll="checkPanoramaProgress()">
+
+    <!-- 长卷内容轨道（总宽度很大，模拟长卷展开） -->
+    <div id="panorama-inner" class="panorama-inner">
+
+      <!-- ===== 段落1：起源 ===== -->
+      <div class="panorama-section" style="width:90vw; min-width:320px; height:100%; position:relative; flex-shrink:0;">
+        <div style="width:100%; height:70%; border-radius:12px; overflow:hidden; margin:20px 10px;">
+          <img src="assets/images/final/文明起源.png" alt="文明起源"
+               style="width:100%; height:100%; object-fit:cover;"
+               onerror="this.parentElement.innerHTML='<div style=width:100%;height:100%;background:linear-gradient(135deg,#1a2a1f,#2a3a2f);display:flex;align-items:center;justify-content:center;color:#7a9a85;font-size:12px;>文明起源<br/>assets/images/final/文明起源.png</div>';" />
+        </div>
+        <p style="color:#d4c9a8; font-size:14px; text-align:center; margin:0 10px 4px; letter-spacing:2px;">文明起源</p>
+        <p style="color:#7a9a85; font-size:11px; text-align:center; margin:0 10px;">约公元前2600年 · 江汉平原文明的曙光</p>
+        <div class="panorama-hotspot" style="top:30%; left:40%;"
+             onclick="openPanoramaHotspot('文明起源', '约4500年前，石家河先民在长江中游的江汉平原上创造了璀璨的史前文明。这里水网密布、土地肥沃，为文明的萌发提供了得天独厚的条件。')"></div>
+      </div>
+
+      <!-- ===== 段落2：琢玉工艺 ===== -->
+      <div class="panorama-section" style="width:90vw; min-width:320px; height:100%; position:relative; flex-shrink:0;">
+        <div style="width:100%; height:70%; border-radius:12px; overflow:hidden; margin:20px 10px;">
+          <img src="assets/images/final/琢玉.png" alt="琢玉工艺"
+               style="width:100%; height:100%; object-fit:cover;"
+               onerror="this.parentElement.innerHTML='<div style=width:100%;height:100%;background:linear-gradient(135deg,#2a2f1f,#3a3f2f);display:flex;align-items:center;justify-content:center;color:#7a9a85;font-size:12px;>琢玉工艺<br/>assets/images/final/琢玉.png</div>';" />
+        </div>
+        <p style="color:#d4c9a8; font-size:14px; text-align:center; margin:0 10px 4px; letter-spacing:2px;">琢玉工艺</p>
+        <p style="color:#7a9a85; font-size:11px; text-align:center; margin:0 10px;">切割 · 钻孔 · 打磨 · 抛光，方寸之间见乾坤</p>
+        <div class="panorama-hotspot" style="top:45%; left:35%;"
+             onclick="openPanoramaHotspot('琢玉工艺', '石家河玉器工艺精湛，先民掌握了切割、钻孔、打磨、抛光等完整工艺链，能在硬度极高的玉石上雕刻出细如发丝的纹饰。')"></div>
+      </div>
+
+      <!-- ===== 段落3：祭祀场景 ===== -->
+      <div class="panorama-section" style="width:90vw; min-width:320px; height:100%; position:relative; flex-shrink:0;">
+        <div style="width:100%; height:70%; border-radius:12px; overflow:hidden; margin:20px 10px;">
+          <img src="assets/images/final/祭祀.png" alt="祭祀场景"
+               style="width:100%; height:100%; object-fit:cover;"
+               onerror="this.parentElement.innerHTML='<div style=width:100%;height:100%;background:linear-gradient(135deg,#1f2a2a,#2f3a3a);display:flex;align-items:center;justify-content:center;color:#7a9a85;font-size:12px;>祭祀场景<br/>assets/images/final/祭祀.png</div>';" />
+        </div>
+        <p style="color:#d4c9a8; font-size:14px; text-align:center; margin:0 10px 4px; letter-spacing:2px;">祭祀场景</p>
+        <p style="color:#7a9a85; font-size:11px; text-align:center; margin:0 10px;">以玉通神 · 巫师起舞，祈求风调雨顺</p>
+        <div class="panorama-hotspot" style="top:25%; left:55%;"
+             onclick="openPanoramaHotspot('祭祀场景', '玉器是石家河先民沟通天地的重要媒介。在盛大的祭祀仪式中，巫师佩戴玉器起舞，祈求风调雨顺、部族兴旺。')"></div>
+      </div>
+
+      <!-- ===== 段落4：日常生活 ===== -->
+      <div class="panorama-section" style="width:90vw; min-width:320px; height:100%; position:relative; flex-shrink:0;">
+        <div style="width:100%; height:70%; border-radius:12px; overflow:hidden; margin:20px 10px;">
+          <img src="assets/images/final/生活.png" alt="日常生活"
+               style="width:100%; height:100%; object-fit:cover;"
+               onerror="this.parentElement.innerHTML='<div style=width:100%;height:100%;background:linear-gradient(135deg,#2f2a1f,#3f3a2f);display:flex;align-items:center;justify-content:center;color:#7a9a85;font-size:12px;>日常生活<br/>assets/images/final/生活.png</div>';" />
+        </div>
+        <p style="color:#d4c9a8; font-size:14px; text-align:center; margin:0 10px 4px; letter-spacing:2px;">日常生活</p>
+        <p style="color:#7a9a85; font-size:11px; text-align:center; margin:0 10px;">种植水稻 · 饲养家畜 · 聚族而居的田园画卷</p>
+        <div class="panorama-hotspot" style="top:50%; left:30%;"
+             onclick="openPanoramaHotspot('日常生活', '石家河先民种植水稻、饲养家畜，制作精美的陶器和玉器。他们聚族而居，形成了复杂的社会结构和丰富的文化传统。')"></div>
+      </div>
+
+      <!-- ===== 段落5：玉凤腾飞 ===== -->
+      <div class="panorama-section" id="panorama-final-section"
+           style="width:90vw; min-width:320px; height:100%; position:relative; flex-shrink:0;">
+        <div style="width:100%; height:70%; border-radius:12px; overflow:hidden; margin:20px 10px; position:relative;">
+          <img src="assets/images/final/凤鸟.png" alt="玉凤腾飞"
+               style="width:100%; height:100%; object-fit:cover;"
+               onerror="this.parentElement.innerHTML='<div style=width:100%;height:100%;background:linear-gradient(135deg,#1a1a2f,#2a2a3f);display:flex;align-items:center;justify-content:center;color:#7a9a85;font-size:12px;>玉凤腾飞<br/>assets/images/final/凤鸟.png</div>';" />
+        </div>
+        <p style="color:#d4c9a8; font-size:14px; text-align:center; margin:0 10px 4px; letter-spacing:2px;">玉凤腾飞</p>
+        <p style="color:#7a9a85; font-size:11px; text-align:center; margin:0 10px;">凤鸟展翅 · 四千五百年的文明回响</p>
+
+        <div id="phoenix-fly-animation"
+               style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+               width:100px; height:100px; display:none; pointer-events:none;">
+            <div style="width:100%; height:100%; border-radius:50%;
+              background:radial-gradient(circle, rgba(218,165,32,0.4), rgba(218,165,32,0.1));
+              animation:phoenixFly 3s ease-in-out forwards;
+              display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:40px;">🐉</span>
+            </div>
+          </div>
+        </div>
+        <div class="panorama-hotspot" style="top:35%; left:50%;"
+             onclick="openPanoramaHotspot('玉凤腾飞', '玉凤是石家河文明的灵魂象征。凤鸟展翅高飞，承载着先民对美好生活的向往，飞越四千五百年的时光，与我们在此相遇。')"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部导航 -->
+  <div style="position:relative; z-index:3; display:flex; justify-content:center; gap:16px; padding:10px 20px; flex-shrink:0;">
+    <button class="btn-jade" style="font-size:13px; padding:8px 20px;" onclick="navigateTo('page-final')">
+      前往终章 →
+    </button>
+  </div>
+
+  <!-- 玉粒 #9 -->
+  <div id="bead-panorama-1" style="position:absolute; top:20%; left:5%; z-index:5; cursor:pointer;"
+       data-bead="9" onclick="collectBead(event, 9, '长卷·画中藏玉')">
+    <span style="font-size:16px;">🟢</span>
+  </div>
+
+  <!-- 玉粒 #10 -->
+  <div id="bead-panorama-2" style="position:absolute; bottom:24%; right:5%; z-index:5; cursor:pointer;"
+       data-bead="10" onclick="collectBead(event, 10, '长卷·终章之钥')">
+    <span style="font-size:16px;">🟢</span>
+  </div>
+
+</section>
+
+
+<!-- ================================================================== -->
+<!--  第7页：终章收官页                                                    -->
+<!-- ================================================================== -->
+<section id="page-final" class="page">
+
+  <!-- 背景 -->
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:0;">
+    <img src="assets/images/final/final_bg.jpg"
+         alt="玉语永存背景"
+         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;"
+         onerror="this.style.display='none';" />
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%;
+      background: linear-gradient(180deg,
+        rgba(10,26,15,0.55) 0%,
+        rgba(15,36,24,0.35) 30%,
+        rgba(26,58,42,0.3) 70%,
+        rgba(10,26,15,0.5) 100%);">
+    </div>
+  </div>
+
+	<!-- 内容 -->
+  <div style="position:relative; z-index:2; display:flex; flex-direction:column; align-items:center;
+    height:100%; overflow-y:auto; padding:30px 20px 40px; text-align:center;">
+
+    <!-- 终章标题 -->
+    <h2 style="color:#daa520; font-size:24px; letter-spacing:8px; margin:0; animation:fadeIn 1s ease-out both;">
+      玉 语 永 存
+    </h2>
+    <p style="color:#b8cfb0; font-size:14px; margin-top:8px;">石家河文明探索之旅 · 圆满收官</p>
+
+    <!-- 分割线 -->
+    <div style="width:80px; height:1px; background:linear-gradient(90deg, transparent, #daa520, transparent); margin:20px 0;"></div>
+
+    <!-- 统计数据 -->
+    <div style="display:flex; gap:24px; margin:12px 0;">
+      <div style="text-align:center;">
+        <div style="color:#daa520; font-size:32px; font-weight:bold;" id="final-album-count">0</div>
+        <div style="color:#7a9a85; font-size:12px;">文物图鉴</div>
+        <div style="color:#4a6a55; font-size:10px;">/ 5件</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="color:#daa520; font-size:32px; font-weight:bold;" id="final-bead-count">0</div>
+        <div style="color:#7a9a85; font-size:12px;">小玉粒</div>
+        <div style="color:#4a6a55; font-size:10px;">/ 10颗</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="color:#daa520; font-size:32px; font-weight:bold;" id="final-puzzle-count">0</div>
+        <div style="color:#7a9a85; font-size:12px;">拼图通关</div>
+        <div style="color:#4a6a55; font-size:10px;">/ 5关</div>
+      </div>
+    </div>
+
+    <!-- 收藏卡区域 -->
+    <div style="margin:16px 0; padding:16px; border:2px solid rgba(184,207,176,0.25);
+      border-radius:16px; background:rgba(255,255,255,0.03); width:85vw; max-width:340px;">
+      <p style="color:#b8cfb0; font-size:13px; margin-bottom:8px;">📜 我的收藏卡</p>
+      <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;" id="final-collection-display"></div>
+    </div>
+
+    <!-- 楚凤短片解锁状态 -->
+    <div id="final-video-status" style="margin:12px 0; padding:12px 20px; border-radius:24px;
+      background:rgba(255,255,255,0.05); display:inline-block;">
+      <span style="color:#7a9a85; font-size:13px;">🔒 集齐10颗小玉粒解锁文物视频介绍</span>
+    </div>
+
+    <!-- 按钮组 -->
+    <div style="display:flex; gap:12px; margin-top:8px; flex-wrap:wrap; justify-content:center;">
+      <button class="btn-gold" style="font-size:14px; padding:10px 24px;" onclick="shareResult()">
+        📤 分享探索成果
+      </button>
+      <button class="btn-jade" style="font-size:14px; padding:10px 24px;" onclick="restartJourney()">
+        🔄 重新探索
+      </button>
+    </div>
+
+    <!-- 返回互动按钮 -->
+    <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; justify-content:center;">
+      <button style="font-size:11px; padding:6px 12px; border-radius:16px; border:1px solid rgba(184,207,176,0.3);
+        background:transparent; color:#7cc5a8; cursor:pointer;" onclick="navigateTo('page-timeline')">回时间轴</button>
+      <button style="font-size:11px; padding:6px 12px; border-radius:16px; border:1px solid rgba(184,207,176,0.3);
+        background:transparent; color:#7cc5a8; cursor:pointer;" onclick="navigateTo('page-altar')">回祭坛</button>
+      <button style="font-size:11px; padding:6px 12px; border-radius:16px; border:1px solid rgba(184,207,176,0.3);
+        background:transparent; color:#7cc5a8; cursor:pointer;" onclick="navigateTo('page-puzzle')">回工坊</button>
+      <button style="font-size:11px; padding:6px 12px; border-radius:16px; border:1px solid rgba(184,207,176,0.3);
+        background:transparent; color:#7cc5a8; cursor:pointer;" onclick="navigateTo('page-panorama')">回长卷</button>
+    </div>
+
+    <p style="color:#4a6a55; font-size:11px; margin-top:20px;">石家河玉语 © 文化遗产数字传承</p>
+  </div>
+</section>
+
+
+<!-- ================================================================== -->
+<!--                      JavaScript 核心逻辑                             -->
+<!-- ================================================================== -->
+<script>
+/* ==========================================================================
+   石家河玉语 - 核心交互逻辑
+   所有图片/音频/视频路径已预留占位，可直接替换
+   ========================================================================== */
+
+// ==================== 全局状态管理 ====================
+const GameState = {
+  currentPage: 'page-cover',
+  collectedBeads: new Set(),        // 已收集玉粒编号
+  unlockedArtifacts: new Set(),     // 已解锁文物(1-5)
+  completedPuzzles: new Set(),      // 已通关拼图难度(1-5)
+  currentDifficulty: 1,            // 当前拼图难度
+  diyBase: 'phoenix',             // DIY当前底版
+  diyPattern: 'cloud',            // DIY当前纹样
+  bgmPlaying: false,
+};
+
+// 文物数据
+const ARTIFACTS = {
+  1: { name: '玉凤', era: '石家河文化中期', desc: '玉凤是石家河文化的标志性玉器，造型优美，线条流畅，展现了先民对凤鸟的崇拜。凤鸟被视为通天的神使，是连接天地人神的灵物。' },
+  2: { name: '玉虎', era: '石家河文化晚期', desc: '玉虎造型威猛，雕刻精细，是石家河玉器中动物造型的代表作。虎作为力量的象征，在祭祀中扮演着守护神的角色。' },
+  3: { name: '神人面', era: '石家河文化中期', desc: '神人面玉器是石家河文化最具神秘色彩的器物，刻画了先民想象中的神人形象，可能与祖先崇拜、巫术仪式密切相关。' },
+  4: { name: '玉琮', era: '石家河文化晚期', desc: '玉琮外方内圆，象征天圆地方的宇宙观。石家河玉琮造型规整，是长江流域史前玉琮的重要代表，体现了先民的宇宙认知。' },
+  5: { name: '陶塑动物', era: '石家河文化早期', desc: '石家河遗址出土了大量陶塑动物，造型生动传神，说明先民对自然生灵有着细腻的观察和深厚的情感。这些陶塑是了解史前生活的重要窗口。' },
+};
+
+// 拼图难度配置
+const PUZZLE_CONFIG = {
+  1: { name: '陶塑动物', pieces: 6,  grid: [2, 3], img: 'assets/images/pingtu/石家河陶俑动物拼图制作.png' },
+  2: { name: '神人面',   pieces: 10, grid: [2, 5], img: 'assets/images/pingtu/神人.png' },
+  3: { name: '玉虎',     pieces: 15, grid: [3, 5], img: 'assets/images/pingtu/玉虎.png' },
+  4: { name: '玉琮',     pieces: 15, grid: [3, 5], img: 'assets/images/pingtu/玉琮.png' },
+  5: { name: '玉凤',     pieces: 20, grid: [4, 5], img: 'assets/images/pingtu/玉凤.png' },
+};
+
+// DIY纹样配置（素材占位）
+const DIY_PATTERNS = [
+  { id: 'cloud',   name: '云雷纹' },
+  { id: 'spiral',  name: '螺旋纹' },
+  { id: 'animal',  name: '兽面纹' },
+  { id: 'bird',    name: '凤鸟纹' },
+  { id: 'wave',    name: '水波纹' },
+  { id: 'net',     name: '网格纹' },
+];
+const DIY_BASES = [
+  { id: 'phoenix', name: '玉凤' },
+  { id: 'tiger',   name: '玉虎' },
+];
+
+// 拼图碎片当前状态（由 PuzzleEngine 管理）
+
+// ==================== 全局交互效果系统 ====================
+// 点击涟漪
+function spawnRipple(e, color) {
+  var el = e.currentTarget;
+  var rect = el.getBoundingClientRect();
+  var ripple = document.createElement('span');
+  ripple.className = 'tap-ripple';
+  var size = Math.max(rect.width, rect.height) * 2;
+  ripple.style.left = (e.clientX - rect.left) + 'px';
+  ripple.style.top  = (e.clientY - rect.top)  + 'px';
+  ripple.style.background = color || 'radial-gradient(circle, rgba(218,165,32,0.35), transparent)';
+  el.style.position = el.style.position || 'relative';
+  el.style.overflow = 'hidden';
+  el.appendChild(ripple);
+  setTimeout(function() { ripple.remove(); }, 600);
+}
+
+// 收集闪光
+function spawnBurst(x, y) {
+  var burst = document.createElement('div');
+  burst.className = 'collect-burst';
+  burst.style.left = (x - 30) + 'px';
+  burst.style.top  = (y - 30) + 'px';
+  burst.style.width = '60px';
+  burst.style.height = '60px';
+  document.body.appendChild(burst);
+  setTimeout(function() { burst.remove(); }, 800);
+}
+
+// 绑定全局涟漪到按钮
+function bindRipples() {
+  document.querySelectorAll('.btn-jade, .btn-gold, .diff-btn:not(.locked), .close-btn, .hotspot, .panorama-hotspot, .timeline-dot').forEach(function(btn) {
+    if (!btn.dataset.rippleBound) {
+      btn.dataset.rippleBound = '1';
+      btn.addEventListener('click', function(e) { spawnRipple(e); });
+    }
+  });
+}
+
+// ==================== 音频系统（占位框架） ====================
+const AudioSystem = {
+  // BGM列表 - 所有路径预留占位
+  bgmList: [
+    { id: 'bgm_main', name: '主界面BGM' },
+    { id: 'bgm_timeline', name: '时间轴BGM' },
+    { id: 'bgm_altar', name: '祭坛BGM' },
+    { id: 'bgm_puzzle', name: '工坊BGM' },
+    { id: 'bgm_panorama', name: '长卷BGM' },
+    { id: 'bgm_final', name: '终章BGM' },
+  ],
+  currentBGM: null,
+
+  // 音效列表 - 所有路径预留占位
+  sfx: {
+    click:       { name: '按钮点击' },
+    pageTurn:    { name: '翻页转场' },
+    beadCollect: { name: '玉粒收集' },
+    puzzleSnap:  { name: '拼图吸附' },
+    puzzleComplete: { name: '拼图完成' },
+    hotspotClick:{ name: '热点点击' },
+    artifactUnlock:{ name: '文物解锁' },
+    drag:        { name: '拖拽摩擦' },
+    phoenixFly:  { name: '玉凤腾飞' },
+  },
+
+  /**
+   * 切换BGM
+   * @param {string} bgmId - BGM标识
+   * 音频占位：【BGM音频文件+assets/audio/bgm/{bgmId}.mp3】
+   */
+  switchBGM(bgmId) {
+    // [待替换音频：BGM切换 - assets/audio/bgm/{bgmId}.mp3]
+    console.log(`[音频占位] 切换BGM: ${bgmId} → assets/audio/bgm/${bgmId}.mp3`);
+    this.currentBGM = bgmId;
+    // TODO: 替换为实际音频播放逻辑
+    // if (this.bgmAudio) { this.bgmAudio.pause(); }
+    // this.bgmAudio = new Audio(`assets/audio/bgm/${bgmId}.mp3`);
+    // this.bgmAudio.loop = true;
+    // this.bgmAudio.volume = 0.4;
+    // this.bgmAudio.play();
+  },
+
+  /**
+   * 播放音效
+   * @param {string} sfxId - 音效标识
+   * 音频占位：【音效文件+assets/audio/sfx/{sfxId}.mp3】
+   */
+  playSFX(sfxId) {
+    // [待替换音频：音效播放 - assets/audio/sfx/{sfxId}.mp3]
+    console.log(`[音频占位] 播放音效: ${sfxId} → assets/audio/sfx/${sfxId}.mp3`);
+    // TODO: 替换为实际音效播放逻辑
+    // const sfx = new Audio(`assets/audio/sfx/${sfxId}.mp3`);
+    // sfx.volume = 0.6;
+    // sfx.play();
+  },
+
+  /** 初始化音频系统 */
+  init() {
+    console.log('[音频系统] 初始化完成，所有音频路径预留占位');
+    // 音频占位：全局BGM循环列表
+    // assets/audio/bgm/bgm_main.mp3      - 主界面BGM
+    // assets/audio/bgm/bgm_timeline.mp3  - 时间轴BGM
+    // assets/audio/bgm/bgm_altar.mp3     - 祭坛BGM
+    // assets/audio/bgm/bgm_puzzle.mp3    - 工坊BGM
+    // assets/audio/bgm/bgm_panorama.mp3  - 长卷BGM
+    // assets/audio/bgm/bgm_final.mp3     - 终章BGM
+    // assets/audio/sfx/click.mp3         - 按钮点击
+    // assets/audio/sfx/pageTurn.mp3      - 翻页转场
+    // assets/audio/sfx/beadCollect.mp3   - 玉粒收集
+    // assets/audio/sfx/puzzleSnap.mp3    - 拼图吸附
+    // assets/audio/sfx/puzzleComplete.mp3- 拼图完成
+    // assets/audio/sfx/hotspotClick.mp3  - 热点点击
+    // assets/audio/sfx/artifactUnlock.mp3- 文物解锁
+    // assets/audio/sfx/drag.mp3          - 拖拽摩擦
+    // assets/audio/sfx/phoenixFly.mp3    - 玉凤腾飞
+  }
+};
+
+// ==================== 页面导航系统 ====================
+/**
+ * 页面流转：封面 → 序章 → 时间轴 → 祭坛 → 拼图工坊 → 全景长卷 → 终章
+ */
+var PAGE_ORDER = ['page-cover', 'page-prologue', 'page-timeline', 'page-altar', 'page-puzzle', 'page-panorama', 'page-final'];
+
+function navigateTo(targetPageId) {
+  var cur = document.querySelector('.page.active');
+  var tgt = document.getElementById(targetPageId);
+  if (!tgt || cur === tgt) return;
+
+  AudioSystem.playSFX('pageTurn');
+
+  var curIdx = PAGE_ORDER.indexOf(cur ? cur.id : '');
+  var tgtIdx = PAGE_ORDER.indexOf(targetPageId);
+  var forward = tgtIdx > curIdx;
+
+  // === 闪白脉冲 ===
+  var flash = document.createElement('div');
+  flash.className = 'transition-flash';
+  document.body.appendChild(flash);
+  requestAnimationFrame(function() {
+    flash.classList.add('peak');
+    // 120ms 后淡出（够短，不刺眼）
+    setTimeout(function() { flash.classList.remove('peak'); }, 120);
+    // 彻底移除
+    setTimeout(function() { if (flash.parentNode) flash.remove(); }, 350);
+  });
+
+  // === 当前页退场 ===
+  if (cur) {
+    var exitClass = forward ? 'exit-forward' : 'exit-backward';
+    cur.classList.add(exitClass);
+    cur.classList.remove('active');
+    var cp = cur;
+    setTimeout(function() { cp.classList.remove(exitClass); }, 450);
+  }
+
+  // === 目标页入场（闪白后微延迟） ===
+  setTimeout(function() {
+    tgt.classList.add('active');
+    GameState.currentPage = targetPageId;
+
+    // 入场完成后再初始化
+    setTimeout(function() {
+      onPageEnter(targetPageId);
+      bindRipples();
+    }, 150);
+
+    // 内容交错淡入
+    staggerPageContent(tgt);
+  }, 160);
+
+  // BGM
+  var bgmMap = {
+    'page-cover': 'bgm_main', 'page-prologue': 'bgm_main',
+    'page-timeline': 'bgm_timeline', 'page-altar': 'bgm_altar',
+    'page-puzzle': 'bgm_puzzle', 'page-panorama': 'bgm_panorama',
+    'page-final': 'bgm_final',
+  };
+  if (bgmMap[targetPageId]) AudioSystem.switchBGM(bgmMap[targetPageId]);
+
+  updateBeadIndicator();
+}
+
+// 内容交错淡入
+function staggerPageContent(page) {
+  var skip = page.querySelectorAll('.puzzle-board, .puzzle-pool, #puzzle-board, #puzzle-pool, .puzzle-piece, img, .jade-particle, [data-bead], canvas');
+  var els = page.querySelectorAll('h2, h1, p, .btn-jade, .btn-gold, .diff-btn, .hotspot, .timeline-scene, .panorama-section, .timeline-dot, .panorama-hotspot, .share-card, .modal-card');
+  var skipSet = {};
+  skip.forEach(function(s) { skipSet[s] = true; });
+  els.forEach(function(el, i) {
+    // 跳过正在被跳过的元素及其子元素
+    var insideSkip = false;
+    var p = el;
+    while (p && p !== page) {
+      if (skipSet[p]) { insideSkip = true; break; }
+      p = p.parentElement;
+    }
+    if (insideSkip) return;
+    // 已有动画的元素跳过
+    var style = el.getAttribute('style') || '';
+    if (style.indexOf('animation') !== -1) return;
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
+    (function(e, idx) {
+      setTimeout(function() {
+        e.style.opacity = '';
+        e.style.transform = '';
+      }, 60 + idx * 35);
+    })(el, i);
+  });
+}
+
+
+/** 页面进入时的初始化 */
+function onPageEnter(pageId) {
+  switch (pageId) {
+    case 'page-prologue':
+      break;
+    case 'page-timeline':
+      resetTimelineScroll();
+      break;
+    case 'page-altar':
+      updateHotspotStates();
+      break;
+    case 'page-puzzle':
+      initPuzzle();
+      break;
+    case 'page-panorama':
+      resetPanoramaScroll();
+      break;
+    case 'page-final':
+      updateFinalStats();
+      break;
+  }
+}
+
+// ==================== 玉粒收集系统 ====================
+/**
+ * 收集玉粒
+ * @param {Event} event - 点击事件
+ * @param {number} beadId - 玉粒编号(1-10)
+ * @param {string} location - 收集位置描述
+ */
+function collectBead(event, beadId, location) {
+  event.stopPropagation();
+
+  if (GameState.collectedBeads.has(beadId)) {
+    showToast('这枚玉粒已经收集过了~');
+    return;
+  }
+
+  GameState.collectedBeads.add(beadId);
+  AudioSystem.playSFX('beadCollect');
+
+  // 收集闪光
+  var beadEl = event.currentTarget;
+  if (beadEl) {
+    var rect = beadEl.getBoundingClientRect();
+    spawnBurst(rect.left + rect.width/2, rect.top + rect.height/2);
+    beadEl.style.animation = 'beadFlyAway 0.5s ease-out forwards';
+    setTimeout(function() { beadEl.style.display = 'none'; }, 500);
+  }
+
+  // 弹窗提示
+  var toast = document.getElementById('bead-toast');
+  document.getElementById('bead-toast-detail').textContent = location + '（' + beadId + '/10）';
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 2000);
+
+  updateBeadIndicator();
+  // 计数跳动
+  var countEl = document.getElementById('bead-count');
+  if (countEl) { countEl.classList.remove('count-pop'); void countEl.offsetWidth; countEl.classList.add('count-pop'); }
+
+  // 检查是否集齐
+  if (GameState.collectedBeads.size >= 10) {
+    setTimeout(() => {
+      showToast('🎉 集齐10颗小玉粒！文物视频介绍已解锁！');
+      // 解锁视频播放
+      document.getElementById('final-video-status').innerHTML =
+        '<span style="color:#daa520; font-size:13px;">🔓 文物视频介绍已解锁！</span>' +
+        '<br/><button class="btn-gold" style="font-size:12px; padding:6px 16px; margin-top:8px;" onclick="playChuPhoenixVideo()">▶ 观看短片</button>';
+    }, 2500);
+  }
+}
+
+/** 更新玉粒指示器 */
+function updateBeadIndicator() {
+  const indicator = document.getElementById('bead-indicator');
+  const countEl = document.getElementById('bead-count');
+  const count = GameState.collectedBeads.size;
+
+  if (count > 0) {
+    indicator.style.display = 'flex';
+    countEl.textContent = `${count}/10`;
+  } else {
+    indicator.style.display = 'none';
+  }
+
+  // 更新终章统计
+  var finalBead = document.getElementById('final-bead-count');
+  if (finalBead) finalBead.textContent = count;
+}
+
+/** Toast提示 */
+function showToast(msg) {
+  const toast = document.getElementById('bead-toast');
+  document.getElementById('bead-toast-detail').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => { toast.classList.remove('show'); }, 2000);
+}
+
+// ==================== 封面粒子生成 ====================
+function generateCoverParticles() {
+  var container = document.getElementById('cover-particles');
+  if (!container) return;
+
+  for (var i = 0; i < 25; i++) {
+    var particle = document.createElement('div');
+    particle.className = 'jade-particle';
+    var size = 3 + Math.random() * 14;
+    var x = Math.random() * 100;
+    var y = Math.random() * 100;
+    var dur = 5 + Math.random() * 10;
+    var delay = Math.random() * 6;
+    var colors = [
+      'radial-gradient(circle at 30% 30%, rgba(184,207,176,0.8), rgba(61,168,122,0.3))',
+      'radial-gradient(circle at 30% 30%, rgba(218,165,32,0.6), rgba(184,207,176,0.2))',
+      'radial-gradient(circle at 30% 30%, rgba(200,220,200,0.7), rgba(100,180,140,0.25))',
+      'radial-gradient(circle at 30% 30%, rgba(212,201,168,0.7), rgba(61,168,122,0.2))'
+    ];
+    particle.style.cssText =
+      'top:' + y + '%; left:' + x + '%;' +
+      'width:' + size + 'px; height:' + size + 'px;' +
+      '--dur:' + dur + 's; --delay:' + delay + 's;' +
+      'opacity:' + (0.12 + Math.random() * 0.3) + ';' +
+      'background:' + colors[Math.floor(Math.random() * colors.length)] + ';';
+    container.appendChild(particle);
+  }
+}
+
+// ==================== 时间轴逻辑 ====================
+function resetTimelineScroll() {
+  const scroll = document.getElementById('timeline-scroll');
+  if (scroll) scroll.scrollLeft = 0;
+  updateTimelineProgress();
+}
+
+function updateTimelineProgress() {
+  const scroll = document.getElementById('timeline-scroll');
+  if (!scroll) return;
+
+  const maxScroll = scroll.scrollWidth - scroll.clientWidth;
+  const progress = maxScroll > 0 ? (scroll.scrollLeft / maxScroll) * 100 : 0;
+  document.getElementById('timeline-progress').style.width = progress + '%';
+
+  // 更新活跃光点
+  const scenes = scroll.querySelectorAll('.timeline-scene');
+  const dots = document.querySelectorAll('#timeline-dots .timeline-dot');
+  let activeIdx = 0;
+  const center = scroll.scrollLeft + scroll.clientWidth / 2;
+  scenes.forEach((scene, i) => {
+    const left = scene.offsetLeft;
+    const right = left + scene.offsetWidth;
+    if (center >= left && center < right) activeIdx = i;
+  });
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === activeIdx);
+  });
+
+  // 场景变化时触发音效
+  AudioSystem.playSFX('click');
+}
+
+function scrollToScene(index) {
+  const scroll = document.getElementById('timeline-scroll');
+  const scenes = scroll.querySelectorAll('.timeline-scene');
+  if (scenes[index - 1]) {
+    scenes[index - 1].scrollIntoView({ behavior: 'smooth', inline: 'center' });
+    AudioSystem.playSFX('click');
+  }
+}
+
+// ==================== 祭坛/文物系统 ====================
+function updateHotspotStates() {
+  document.querySelectorAll('#page-altar .hotspot').forEach(hs => {
+    const id = parseInt(hs.dataset.artifact);
+    if (GameState.unlockedArtifacts.has(id)) {
+      hs.classList.add('collected');
+    }
+  });
+  updateAlbumCount();
+}
+
+function openArtifactInfo(hotspotEl) {
+  const id = parseInt(hotspotEl.dataset.artifact);
+  const name = hotspotEl.dataset.name;
+  const era = hotspotEl.dataset.era;
+  const desc = hotspotEl.dataset.desc;
+
+  AudioSystem.playSFX('hotspotClick');
+
+  // 标记为已解锁
+  if (!GameState.unlockedArtifacts.has(id)) {
+    GameState.unlockedArtifacts.add(id);
+    AudioSystem.playSFX('artifactUnlock');
+    hotspotEl.classList.add('collected');
+    // 解锁爆发
+    var hr = hotspotEl.getBoundingClientRect();
+    spawnBurst(hr.left + hr.width/2, hr.top + hr.height/2);
+    updateAlbumCount();
+    // 图鉴计数跳动
+    var ac = document.getElementById('album-count');
+    if (ac) { ac.classList.remove('count-pop'); void ac.offsetWidth; ac.classList.add('count-pop'); }
+  }
+
+  // 文物细节图映射
+  const detailImages = {
+    1: 'phoenix_detail.png',
+    2: 'tiger_detail.png',
+    3: 'deity_detail.png',
+    4: 'cong_detail.png',
+    5: 'pottery_detail.png',
+  };
+
+  // 弹出科普弹窗
+  document.getElementById('modal-title').textContent = `${name} · ${era}`;
+  document.getElementById('modal-body').innerHTML = `
+    <p style="color:#d4ece0; line-height:1.8;">${desc}</p>
+    <div style="margin-top:12px; padding:10px; border-radius:8px;
+      background:rgba(255,255,255,0.03); text-align:center;">
+      <img src="assets/images/artifacts/${detailImages[id] || ''}"
+           alt="${name}细节图"
+           style="width:100%; max-width:280px; border-radius:8px;"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+      <p style="color:#5a7a65; font-size:11px; display:none;">[图片加载中…]</p>
+    </div>
+  `;
+  document.getElementById('modal-image').style.display = 'none';
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function openAlbum() {
+  const unlocked = Array.from(GameState.unlockedArtifacts);
+  let html = '<div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">';
+
+  for (let i = 1; i <= 5; i++) {
+    const art = ARTIFACTS[i];
+    const isUnlocked = GameState.unlockedArtifacts.has(i);
+    html += `
+      <div class="album-card ${isUnlocked ? 'unlocked' : ''}" style="width:80px; height:100px;">
+        <!-- 图片占位：【图鉴${art.name}图标+assets/images/album/icon_${i}.png】 -->
+        <span style="font-size:24px;">${isUnlocked ? '✨' : '🔒'}</span>
+        <span style="font-size:10px; color:${isUnlocked ? '#d4ece0' : '#5a7a65'}; margin-top:4px;">${art.name}</span>
+        ${isUnlocked ? `<span style="font-size:9px; color:#7cc5a8;">已收集</span>` : ''}
+      </div>
+    `;
+  }
+  html += '</div>';
+
+  document.getElementById('modal-title').textContent = '📖 文物图鉴';
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal-image').style.display = 'none';
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function updateAlbumCount() {
+  const countEl = document.getElementById('album-count');
+  if (countEl) countEl.textContent = GameState.unlockedArtifacts.size;
+
+  var finalAlbum = document.getElementById('final-album-count');
+  if (finalAlbum) finalAlbum.textContent = GameState.unlockedArtifacts.size;
+}
+
+// ==================== 弹窗系统 ====================
+function closeModal(event) {
+  if (event.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('show');
+  }
+}
+function closeModalDirect() {
+  document.getElementById('modal-overlay').classList.remove('show');
+}
+
+// ==================== 全景长卷逻辑 ====================
+function resetPanoramaScroll() {
+  const scroll = document.getElementById('panorama-scroll');
+  if (scroll) scroll.scrollLeft = 0;
+}
+
+function checkPanoramaProgress() {
+  const scroll = document.getElementById('panorama-scroll');
+  if (!scroll) return;
+
+  // 检测是否滚动到末尾（玉凤腾飞段）
+  const maxScroll = scroll.scrollWidth - scroll.clientWidth;
+  const atEnd = maxScroll > 0 && scroll.scrollLeft >= maxScroll - 30;
+
+  if (atEnd) {
+    triggerPhoenixAnimation();
+  }
+}
+
+let phoenixTriggered = false;
+function triggerPhoenixAnimation() {
+  if (phoenixTriggered) return;
+  phoenixTriggered = true;
+
+  AudioSystem.playSFX('phoenixFly');
+
+  const animEl = document.getElementById('phoenix-fly-animation');
+  if (animEl) {
+    animEl.style.display = 'block';
+    // 重新触发动画
+    animEl.querySelector('div').style.animation = 'none';
+    animEl.querySelector('div').offsetHeight; // reflow
+    animEl.querySelector('div').style.animation = 'phoenixFly 3s ease-in-out forwards';
+  }
+}
+
+function openPanoramaHotspot(title, desc) {
+  AudioSystem.playSFX('hotspotClick');
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = `<p style="color:#d4ece0; line-height:1.8;">${desc}</p>`;
+  document.getElementById('modal-image').style.display = 'none';
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+// ==================== 拼图系统（最终版） ====================
+var PuzzleEngine = {
+  board: null, pool: null, refImg: null,
+  tileW: 0, tileH: 0, coverW: 0, coverH: 0,
+  rows: 0, cols: 0, imgSrc: '',
+  pieces: [], drag: null,
+
+  init: function(level) {
+    var cfg = PUZZLE_CONFIG[level];
+    if (!cfg) return;
+
+    this.board = document.getElementById('puzzle-board');
+    this.pool  = document.getElementById('puzzle-pool');
+    this.refImg = document.getElementById('puzzle-ref-img');
+    this.rows = cfg.grid[0];
+    this.cols = cfg.grid[1];
+    this.imgSrc = cfg.img;
+    this.pieces = [];
+
+    // 清空底板
+    while (this.board.firstChild) {
+      if (this.board.firstChild.id !== 'puzzle-ref-img') this.board.firstChild.remove();
+      else break;
+    }
+    this.board.querySelectorAll('.puzzle-piece').forEach(function(p) { p.remove(); });
+    this.pool.innerHTML = '';
+    this.board.classList.remove('complete');
+    this.board.style.setProperty('--rows', this.rows);
+    this.board.style.setProperty('--cols', this.cols);
+    this.board.style.width = '';
+    this.board.style.height = '';
+
+    // 参考图
+    if (this.refImg) {
+      this.refImg.src = '';
+      this.refImg.style.opacity = '0';
+    }
+
+    this.cancelDrag();
+
+    var hint = document.createElement('p');
+    hint.id = 'puzzle-pool-hint';
+    hint.style.cssText = 'color:#5a7a65;font-size:12px;text-align:center;margin:8px 0;width:100%';
+    hint.textContent = '加载中…';
+    this.pool.appendChild(hint);
+
+    var self = this;
+    var loader = new Image();
+    loader.onload = function() { self._build(loader); };
+    loader.onerror = function() {
+      document.getElementById('puzzle-pool-hint').textContent = '图片加载失败';
+    };
+    loader.src = cfg.img;
+  },
+
+  _build: function(img) {
+    var board = this.board;
+    var rows = this.rows, cols = this.cols;
+    if (board.clientWidth === 0) {
+      var self = this;
+      requestAnimationFrame(function() { self._build(img); });
+      return;
+    }
+
+    var maxW = Math.min(window.innerWidth * 0.88, 380);
+    var maxH = Math.min(window.innerHeight * 0.4, 280);
+    var bw = maxW, bh = Math.round(bw * img.naturalHeight / img.naturalWidth);
+    if (bh > maxH) { bh = maxH; bw = Math.round(bh * img.naturalWidth / img.naturalHeight); }
+
+    var tw = Math.floor(bw / cols), th = Math.floor(bh / rows);
+    this.tileW = tw; this.tileH = th;
+    var cw = tw * cols, ch = th * rows;
+    this.coverW = cw; this.coverH = ch;
+
+    board.style.width = cw + 'px';
+    board.style.height = ch + 'px';
+
+    // 参考图
+    if (this.refImg) {
+      this.refImg.src = this.imgSrc;
+      this.refImg.style.width = cw + 'px';
+      this.refImg.style.height = ch + 'px';
+      this.refImg.style.opacity = '0.4';
+    }
+
+    // 池中缩放比例
+    var scale = Math.min(1, 80 / Math.max(tw, th));
+
+    // === background-image 裁剪（纯CSS，兼容file://） ===
+    var pieceData = [];
+    var self = this;
+    this.pool.innerHTML = '';
+
+    for (var r = 0; r < rows; r++) {
+      for (var c = 0; c < cols; c++) {
+        var id = 'p' + r + '-' + c;
+        var el = document.createElement('div');
+        el.className = 'puzzle-piece';
+        el.dataset.pieceId = id;
+        el.style.width = Math.round(tw * scale) + 'px';
+        el.style.height = Math.round(th * scale) + 'px';
+        el.style.backgroundImage = 'url("' + this.imgSrc + '")';
+        el.style.backgroundRepeat = 'no-repeat';
+        el.style.backgroundSize = Math.round(cw * scale) + 'px ' + Math.round(ch * scale) + 'px';
+        el.style.backgroundPosition = (-Math.round(c * tw * scale)) + 'px ' + (-Math.round(r * th * scale)) + 'px';
+
+        var pd = { id: id, row: r, col: c, snapped: false, el: el };
+        pieceData.push(pd);
+
+        el.addEventListener('pointerdown', function(pd) {
+          return function(ev) { self._down(ev, pd); };
+        }(pd), { passive: false });
+
+        this.pool.appendChild(el);
+      }
+    }
+
+    // 洗牌 — 重排 pieceData 数组和DOM顺序
+    for (var i = pieceData.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = pieceData[i]; pieceData[i] = pieceData[j]; pieceData[j] = t;
+    }
+    for (i = 0; i < pieceData.length; i++) {
+      this.pool.appendChild(pieceData[i].el);
+    }
+
+    this.pieces = pieceData;
+
+    var te = document.getElementById('puzzle-total-count');
+    if (te) te.textContent = pieceData.length;
+    var pe = document.getElementById('puzzle-placed-count');
+    if (pe) pe.textContent = '0';
+
+    this._brect = board.getBoundingClientRect();
+  },
+
+  // === 拖拽 ===
+
+  _down: function(e, p) {
+    if (p.snapped) return;
+    e.preventDefault(); e.stopPropagation();
+    p.el.setPointerCapture(e.pointerId);
+    var pr = p.el.getBoundingClientRect();
+    this._brect = this.board.getBoundingClientRect();
+
+    var clone = p.el.cloneNode(true);
+    clone.className = 'puzzle-piece dragging';
+    clone.style.width = pr.width + 'px';
+    clone.style.height = pr.height + 'px';
+    clone.style.left = pr.left + 'px';
+    clone.style.top = pr.top + 'px';
+    document.body.appendChild(clone);
+
+    p.el.classList.add('picked');
+    document.body.style.overflow = 'hidden';
+    this.drag = { piece: p, clone: clone, pid: e.pointerId, sx: e.clientX, sy: e.clientY };
+    AudioSystem.playSFX('drag');
+  },
+
+  _move: function(e) {
+    if (!this.drag) return;
+    e.preventDefault();
+    this.drag.clone.style.transform = 'translate3d(' + (e.clientX - this.drag.sx) + 'px,' + (e.clientY - this.drag.sy) + 'px,0)';
+  },
+
+  _up: function(e) {
+    if (!this.drag) return;
+    e.preventDefault();
+    var d = this.drag;
+    try { d.piece.el.releasePointerCapture(e.pointerId); } catch (ex) {}
+    var cr = d.clone.getBoundingClientRect();
+    var br = this.board.getBoundingClientRect();
+    this._brect = br;
+    this._trySnap(d.piece, cr.left + cr.width / 2 - br.left, cr.top + cr.height / 2 - br.top, d.clone);
+  },
+
+  _cancel: function(e) {
+    if (!this.drag) return;
+    try { this.drag.piece.el.releasePointerCapture(e.pointerId); } catch (ex) {}
+    this.cancelDrag();
+  },
+
+  // === 吸附 ===
+
+  _trySnap: function(piece, dx, dy, clone) {
+    var tw = this.tileW, th = this.tileH;
+    var tx = piece.col * tw + tw / 2, ty = piece.row * th + th / 2;
+    if (Math.sqrt((dx - tx) * (dx - tx) + (dy - ty) * (dy - ty)) < Math.min(tw, th) * 0.45) {
+      var cf = false;
+      for (var i = 0; i < this.pieces.length; i++) {
+        var pp = this.pieces[i];
+        if (pp.snapped && pp.row === piece.row && pp.col === piece.col && pp.id !== piece.id) { cf = true; break; }
+      }
+      if (!cf) { this._snap(piece, clone); return; }
+    }
+    this.cancelDrag();
+  },
+
+  _snap: function(piece, clone) {
+    if (clone) clone.remove();
+    var el = piece.el, tw = this.tileW, th = this.tileH;
+    var cw = this.coverW, ch = this.coverH;
+
+    el.className = 'puzzle-piece snapped';
+    el.style.cssText = '';
+    el.style.position = 'absolute';
+    el.style.left = (piece.col * tw) + 'px';
+    el.style.top = (piece.row * th) + 'px';
+    el.style.width = tw + 'px';
+    el.style.height = th + 'px';
+    el.style.zIndex = '1';
+    // 更新background为board实际尺寸
+    el.style.backgroundImage = 'url("' + this.imgSrc + '")';
+    el.style.backgroundRepeat = 'no-repeat';
+    el.style.backgroundSize = cw + 'px ' + ch + 'px';
+    el.style.backgroundPosition = (-piece.col * tw) + 'px ' + (-piece.row * th) + 'px';
+    piece.snapped = true;
+
+    if (el.parentElement !== this.board) this.board.appendChild(el);
+
+    this.drag = null;
+    document.body.style.overflow = '';
+    AudioSystem.playSFX('puzzleSnap');
+
+    var ct = 0;
+    for (var i = 0; i < this.pieces.length; i++) { if (this.pieces[i].snapped) ct++; }
+    var pe = document.getElementById('puzzle-placed-count');
+    if (pe) pe.textContent = ct;
+
+    this._checkDone();
+  },
+
+  cancelDrag: function() {
+    if (this.drag) {
+      if (this.drag.clone) this.drag.clone.remove();
+      this.drag.piece.el.classList.remove('picked');
+      this.drag.piece.el.style.opacity = '1';
+      this.drag = null;
+      document.body.style.overflow = '';
+    }
+  },
+
+  _checkDone: function() {
+    var all = true;
+    for (var i = 0; i < this.pieces.length; i++) { if (!this.pieces[i].snapped) { all = false; break; } }
+    if (all) {
+      var cfg = PUZZLE_CONFIG[GameState.currentDifficulty];
+      AudioSystem.playSFX('puzzleComplete');
+      this.board.classList.add('complete');
+      if (this.refImg) this.refImg.style.opacity = '1';
+
+      var pe = document.getElementById('puzzle-placed-count');
+      if (pe) pe.textContent = this.pieces.length;
+      GameState.completedPuzzles.add(GameState.currentDifficulty);
+
+      var ov = document.getElementById('puzzle-complete-overlay');
+      document.getElementById('puzzle-complete-name').textContent = cfg.name + ' 复原成功！';
+      ov.style.display = 'flex';
+      var self = this;
+      setTimeout(function() { ov.style.display = 'none'; }, 3000);
+
+      // 解锁下一个难度按钮
+      updateDifficultyButtons(GameState.currentDifficulty);
+
+      var fp = document.getElementById('final-puzzle-count');
+      if (fp) fp.textContent = GameState.completedPuzzles.size;
+    }
+  },
+
+  reset: function() {
+    AudioSystem.playSFX('click');
+    this.init(GameState.currentDifficulty);
+  }
+};
+
+// === 全局事件 ===
+document.addEventListener('pointermove', function(e) {
+  if (PuzzleEngine.drag) { e.preventDefault(); PuzzleEngine._move(e); }
+}, { passive: false });
+document.addEventListener('pointerup', function(e) {
+  if (PuzzleEngine.drag) { PuzzleEngine._up(e); }
+});
+document.addEventListener('pointercancel', function(e) {
+  if (PuzzleEngine.drag) { PuzzleEngine._cancel(e); }
+});
+document.addEventListener('selectstart', function(e) {
+  if (PuzzleEngine.drag) { e.preventDefault(); }
+});
+
+// ==================== 对外接口 ====================
+function selectDifficulty(level) {
+  // 检查解锁：level N 需要 N-1 已完成
+  if (level > 1 && !GameState.completedPuzzles.has(level - 1)) {
+    showToast('🔒 请先完成上一个拼图！');
+    return;
+  }
+
+  GameState.currentDifficulty = level;
+  AudioSystem.playSFX('click');
+
+  // 更新所有按钮状态
+  updateDifficultyButtons(level);
+
+  PuzzleEngine.init(level);
+}
+
+function updateDifficultyButtons(activeLevel) {
+  var active = activeLevel || GameState.currentDifficulty;
+  document.querySelectorAll('#diff-selector .diff-btn').forEach(function(btn) {
+    var diff = parseInt(btn.dataset.diff);
+    var isActive = diff === active;
+    btn.classList.toggle('active', isActive);
+
+    // 锁定状态：需要完成前一个拼图
+    var isLocked = false;
+    if (diff > 1 && !GameState.completedPuzzles.has(diff - 1)) {
+      isLocked = true;
+    }
+    btn.classList.toggle('locked', isLocked);
+
+    // 更新按钮文字
+    var name = PUZZLE_CONFIG[diff].name;
+    var count = PUZZLE_CONFIG[diff].pieces;
+    var done = GameState.completedPuzzles.has(diff);
+    if (done) {
+      btn.textContent = '✅ ' + name + ' ' + count + '块';
+    } else if (isLocked) {
+      btn.textContent = '🔒 ' + name + ' ' + count + '块';
+    } else {
+      btn.textContent = name + ' ' + count + '块';
+    }
+
+    if (isActive && !isLocked) {
+      btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+  });
+}
+
+function initPuzzle() {
+  updateDifficultyButtons(GameState.currentDifficulty);
+  PuzzleEngine.init(GameState.currentDifficulty);
+}
+
+function resetPuzzle() {
+  PuzzleEngine.reset();
+}
+
+// ==================== DIY纹样换装系统 ====================
+function toggleDIYPanel() {
+  const panel = document.getElementById('diy-panel');
+  const isOpen = panel.classList.contains('show');
+
+  if (!isOpen) {
+    AudioSystem.playSFX('click');
+    renderDIYOptions();
+    panel.classList.add('show');
+  } else {
+    panel.classList.remove('show');
+  }
+}
+
+function renderDIYOptions() {
+  // 纹样选项
+  const patternsContainer = document.getElementById('diy-patterns');
+  patternsContainer.innerHTML = DIY_PATTERNS.map(p => `
+    <div class="diy-pattern-option ${GameState.diyPattern === p.id ? 'selected' : ''}"
+         onclick="selectDIYPattern('${p.id}')"
+         title="${p.name}">
+      <!-- 图片占位：【DIY纹样${p.name}+assets/images/diy/pattern_${p.id}.png】 -->
+      <div style="width:100%; height:100%; border-radius:10px;
+        background:linear-gradient(135deg, #3a5a40, #2a4a30);
+        display:flex; align-items:center; justify-content:center; font-size:10px; color:#b8cfb0;">
+        ${p.name}
+      </div>
+    </div>
+  `).join('');
+
+  // 底版选项
+  const basesContainer = document.getElementById('diy-bases');
+  basesContainer.innerHTML = DIY_BASES.map(b => `
+    <div class="diy-pattern-option ${GameState.diyBase === b.id ? 'selected' : ''}"
+         onclick="selectDIYBase('${b.id}')"
+         title="${b.name}">
+      <!-- 图片占位：【DIY底版${b.name}+assets/images/diy/base_${b.id}.png】 -->
+      <div style="width:100%; height:100%; border-radius:10px;
+        background:linear-gradient(135deg, #4a5a40, #3a4a30);
+        display:flex; align-items:center; justify-content:center; font-size:10px; color:#d4c9a8;">
+        ${b.name}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectDIYPattern(patternId) {
+  GameState.diyPattern = patternId;
+  AudioSystem.playSFX('click');
+  renderDIYOptions();
+  // 图片占位：【应用纹样${patternId}到当前底版 - assets/images/diy/pattern_${patternId}.png】
+  console.log(`[图片占位] DIY纹样应用: ${patternId} → assets/images/diy/pattern_${patternId}.png`);
+}
+
+function selectDIYBase(baseId) {
+  GameState.diyBase = baseId;
+  AudioSystem.playSFX('click');
+  renderDIYOptions();
+  // 图片占位：【切换底版${baseId} - assets/images/diy/base_${baseId}.png】
+  console.log(`[图片占位] DIY底版切换: ${baseId} → assets/images/diy/base_${baseId}.png`);
+}
+
+function saveDIYImage() {
+  AudioSystem.playSFX('click');
+  // 图片占位：【保存DIY合成图到相册 - 通过Canvas合成底版+纹样】
+  console.log('[功能占位] 保存DIY图片 - 需部署后通过Canvas合成实现');
+  showToast('💾 保存功能将在部署后启用');
+}
+
+function shareDIYImage() {
+  AudioSystem.playSFX('click');
+  // 图片占位：【分享DIY合成图 - 调用Web Share API或生成分享链接】
+  console.log('[功能占位] 分享DIY图片 - 需部署后实现');
+  showToast('📤 分享功能将在部署后启用');
+}
+
+// ==================== 终章逻辑 ====================
+function updateFinalStats() {
+  // 数字滚动
+  countUpTo('final-album-count', GameState.unlockedArtifacts.size);
+  countUpTo('final-bead-count', GameState.collectedBeads.size);
+  countUpTo('final-puzzle-count', GameState.completedPuzzles.size);
+
+  updateFinalCollectionDisplay();
+
+  if (GameState.collectedBeads.size >= 10) {
+    document.getElementById('final-video-status').innerHTML =
+      '<span style="color:#daa520; font-size:13px;">🔓 文物视频介绍已解锁！</span>' +
+      '<br/><button class="btn-gold" style="font-size:12px; padding:6px 16px; margin-top:8px;" onclick="playChuPhoenixVideo()">▶ 观看短片</button>';
+  }
+}
+
+function countUpTo(elId, target) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  var current = parseInt(el.textContent) || 0;
+  if (current === target) return;
+  var step = target > current ? 1 : -1;
+  var interval = Math.max(30, 400 / Math.abs(target - current || 1));
+  var timer = setInterval(function() {
+    current += step;
+    el.textContent = current;
+    el.classList.remove('count-pop'); void el.offsetWidth; el.classList.add('count-pop');
+    if (current === target) clearInterval(timer);
+  }, interval);
+}
+
+function updateFinalCollectionDisplay() {
+  var container = document.getElementById('final-collection-display');
+  if (!container) return;
+  var names = {1:'玉凤',2:'玉虎',3:'神人面',4:'玉琮',5:'陶塑动物'};
+  var html = '';
+  for (var i = 1; i <= 5; i++) {
+    var ok = GameState.unlockedArtifacts.has(i);
+    html += '<div style="width:52px; height:64px; border-radius:8px;' +
+      'background:'+(ok?'rgba(61,168,122,0.15)':'rgba(255,255,255,0.03)')+';' +
+      'border:1px solid '+(ok?'rgba(61,168,122,0.4)':'rgba(255,255,255,0.08)')+';' +
+      'display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:20px;">' +
+      (ok?'✨':'🔒')+'<span style="font-size:9px;color:'+(ok?'#b8cfb0':'#5a7a65')+';margin-top:2px;">'+names[i]+'</span></div>';
+  }
+  container.innerHTML = html || '<span style="color:#5a7a65;font-size:11px;">探索文物以解锁图鉴</span>';
+}
+
+// ==================== 分享 ====================
+function shareResult() {
+  AudioSystem.playSFX('click');
+
+  // 先尝试原生 Web Share API
+  if (navigator.share) {
+    var text = '🏺 石家河玉语 · 探索成果\n' +
+      '━━━━━━━━━━━━\n' +
+      '📜 文物图鉴：' + GameState.unlockedArtifacts.size + '/5\n' +
+      '💎 小玉粒：' + GameState.collectedBeads.size + '/10\n' +
+      '🧩 拼图通关：' + GameState.completedPuzzles.size + '/5\n' +
+      '━━━━━━━━━━━━\n' +
+      '探索石家河遗址 · 感受四千五百年玉文化';
+    navigator.share({ title: '石家河玉语 · 探索成果', text: text }).catch(function(){});
+    return;
+  }
+
+  // 桌面端：生成海报弹窗
+  generateSharePoster();
+}
+
+// === Canvas 生成分享海报 ===
+function generateSharePoster() {
+  var W = 750, H = 1334;
+  var cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  var ctx = cv.getContext('2d');
+
+  // —— 竹简底色 ——
+  var g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#0d1a12');
+  g.addColorStop(0.15, '#14281c');
+  g.addColorStop(0.5, '#1a3426');
+  g.addColorStop(0.85, '#14281c');
+  g.addColorStop(1, '#0d1a12');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+
+  // —— 底纹肌理 ——
+  ctx.globalAlpha = 0.04;
+  for (var i = 0; i < 60; i++) {
+    ctx.strokeStyle = '#daa520';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(Math.random()*W, Math.random()*H);
+    ctx.lineTo(Math.random()*W, Math.random()*H);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  // —— 顶部玉石光泽 ——
+  var glow = ctx.createRadialGradient(W/2, 60, 20, W/2, 20, W*0.7);
+  glow.addColorStop(0, 'rgba(218,165,32,0.25)');
+  glow.addColorStop(0.5, 'rgba(61,168,122,0.08)');
+  glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  // —— 顶部标题 ——
+  ctx.fillStyle = '#daa520';
+  ctx.font = 'bold 44px "Noto Serif SC", "STSong", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('石家河玉语', W/2, 90);
+
+  ctx.fillStyle = '#7cc5a8';
+  ctx.font = '22px "Noto Sans SC", sans-serif';
+  ctx.fillText('探索成果 · 收藏证书', W/2, 140);
+
+  // —— 装饰横线 ——
+  ctx.strokeStyle = 'rgba(218,165,32,0.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(W/2-120, 170); ctx.lineTo(W/2+120, 170); ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(184,207,176,0.2)';
+  ctx.beginPath(); ctx.moveTo(W/2-140, 176); ctx.lineTo(W/2+140, 176); ctx.stroke();
+
+  // —— 三大成就环形 ——
+  var stats = [
+    { v: GameState.unlockedArtifacts.size, m: 5, l: '文物图鉴', c: '#3da87a' },
+    { v: GameState.collectedBeads.size,    m: 10, l: '小玉粒',   c: '#daa520' },
+    { v: GameState.completedPuzzles.size,  m: 5,  l: '拼图通关', c: '#5ab894' }
+  ];
+  var cy = 260, cr = 50;
+  for (var s = 0; s < 3; s++) {
+    var xx = W/4 + s * W/4;
+
+    // 底面圆环
+    ctx.beginPath();
+    ctx.arc(xx, cy, cr, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,0.04)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // 进度弧
+    var pct = stats[s].v / stats[s].m;
+    ctx.beginPath();
+    ctx.arc(xx, cy, cr, -Math.PI/2, -Math.PI/2 + Math.PI*2*pct);
+    ctx.strokeStyle = stats[s].c;
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // 数字
+    ctx.fillStyle = '#daa520';
+    ctx.font = 'bold 36px "Noto Serif SC", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(stats[s].v, xx, cy + 6);
+
+    // 标签
+    ctx.fillStyle = '#d4c9a8';
+    ctx.font = '16px "Noto Sans SC", sans-serif';
+    ctx.fillText(stats[s].l, xx, cy + cr + 30);
+
+    // 比例
+    ctx.fillStyle = '#5a7a65';
+    ctx.font = '12px "Noto Sans SC", sans-serif';
+    ctx.fillText('/ '+stats[s].m, xx, cy + cr + 50);
+  }
+
+  // —— 中部分隔 ——
+  var sepY = 400;
+  ctx.strokeStyle = 'rgba(184,207,176,0.25)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(60, sepY); ctx.lineTo(W-60, sepY); ctx.stroke();
+
+  // —— 文物图鉴 ——
+  var ay = sepY + 40;
+  ctx.fillStyle = '#7cc5a8';
+  ctx.font = '20px "Noto Sans SC", sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('🏺 已解锁文物', 60, ay);
+
+  var anames = {1:'玉凤',2:'玉虎',3:'神人面',4:'玉琮',5:'陶塑动物'};
+  var ax = 60, ay2 = ay + 30;
+  for (var i = 1; i <= 5; i++) {
+    var ok = GameState.unlockedArtifacts.has(i);
+    var rx = ax + (i-1) * 132;
+    ctx.fillStyle = ok ? 'rgba(61,168,122,0.18)' : 'rgba(255,255,255,0.04)';
+    ctx.strokeStyle = ok ? 'rgba(61,168,122,0.45)' : 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, rx, ay2, 120, 44, 12);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = ok ? '#d4c9a8' : '#5a7a65';
+    ctx.font = '15px "Noto Sans SC", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText((ok?'✨ ':'🔒 ')+anames[i], rx+60, ay2+30);
+  }
+
+  // —— 拼图通关 ——
+  var py = ay2 + 80;
+  ctx.fillStyle = '#7cc5a8';
+  ctx.font = '20px "Noto Sans SC", sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('🧩 已通关拼图', 60, py);
+
+  var pnames = {1:'陶塑动物',2:'神人面',3:'玉虎',4:'玉琮',5:'玉凤'};
+  var pcounts = {1:'6块',2:'10块',3:'15块',4:'15块',5:'20块'};
+  var py2 = py + 30;
+  for (var i = 1; i <= 5; i++) {
+    var ok2 = GameState.completedPuzzles.has(i);
+    var col = Math.floor((i-1) % 2);
+    var row = Math.floor((i-1) / 2);
+    var rx2 = 60 + col * 340, ry2 = py2 + row * 52;
+    ctx.fillStyle = ok2 ? 'rgba(218,165,32,0.15)' : 'rgba(255,255,255,0.04)';
+    ctx.strokeStyle = ok2 ? 'rgba(218,165,32,0.35)' : 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, rx2, ry2, 320, 42, 10);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = ok2 ? '#daa520' : '#5a7a65';
+    ctx.font = '14px "Noto Sans SC", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText((ok2?'✅ ':'🔒 ')+pnames[i]+' '+pcounts[i], rx2+160, ry2+29);
+  }
+
+  // —— 底部玉牌 ——
+  var by = py2 + 140;
+  ctx.fillStyle = 'rgba(10,26,15,0.6)';
+  ctx.strokeStyle = 'rgba(218,165,32,0.4)';
+  ctx.lineWidth = 2;
+  roundRect(ctx, W/2-250, by, 500, 140, 20);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = '#daa520';
+  ctx.font = 'bold 30px "Noto Serif SC", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('文物视频介绍', W/2, by + 56);
+
+  ctx.fillStyle = '#7a9a85';
+  ctx.font = '17px "Noto Sans SC", sans-serif';
+  ctx.fillText('石家河遗址 · 长江中游史前玉器文明', W/2, by + 92);
+
+  ctx.fillStyle = '#4a6a55';
+  ctx.font = '12px "Noto Sans SC", sans-serif';
+  ctx.fillText('石家河玉语 © 文化遗产数字传承', W/2, by + 124);
+
+  // === 弹窗显示 ===
+  var dataUrl = cv.toDataURL('image/jpeg', 0.92);
+  var overlay = document.getElementById('share-poster-overlay');
+  var img = document.getElementById('share-poster-img');
+  img.src = dataUrl;
+  overlay.style.display = 'flex';
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y);
+  ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+  ctx.lineTo(x+w, y+h-r);
+  ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  ctx.lineTo(x+r, y+h);
+  ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+  ctx.lineTo(x, y+r);
+  ctx.quadraticCurveTo(x, y, x+r, y);
+  ctx.closePath();
+}
+
+function closeSharePoster() {
+  document.getElementById('share-poster-overlay').style.display = 'none';
+}
+
+function saveSharePoster() {
+  var img = document.getElementById('share-poster-img');
+  if (navigator.share) {
+    // 移动端用原生分享图片
+    fetch(img.src).then(function(r) { return r.blob(); }).then(function(blob) {
+      var file = new File([blob], '石家河玉语_探索成果.jpg', { type: 'image/jpeg' });
+      navigator.share({ title: '石家河玉语 · 探索成果', files: [file] }).catch(function(){});
+    }).catch(function(){});
+  } else {
+    // 桌面端下载
+    var a = document.createElement('a');
+    a.href = img.src;
+    a.download = '石家河玉语_探索成果.jpg';
+    a.click();
+    showToast('💾 海报已保存！');
+  }
+}
+
+function restartJourney() {
+  AudioSystem.playSFX('click');
+  // 重置所有状态
+  GameState.collectedBeads.clear();
+  GameState.unlockedArtifacts.clear();
+  GameState.completedPuzzles.clear();
+  GameState.currentDifficulty = 1;
+  phoenixTriggered = false;
+
+  // 重置玉粒显示
+  document.querySelectorAll('[data-bead]').forEach(el => {
+    el.style.display = '';
+    el.style.opacity = '1';
+    el.style.transform = '';
+  });
+
+  // 重置热点状态
+  document.querySelectorAll('.hotspot').forEach(hs => hs.classList.remove('collected'));
+
+  // 重置拼图状态
+  updateDifficultyButtons(1);
+
+  updateBeadIndicator();
+  updateAlbumCount();
+  document.getElementById('final-video-status').innerHTML =
+    '<span style="color:#7a9a85; font-size:13px;">🔒 集齐10颗小玉粒解锁文物视频介绍</span>';
+
+  navigateTo('page-cover');
+}
+
+// ==================== 文物视频介绍 播放 ====================
+function playChuPhoenixVideo() {
+  AudioSystem.playSFX('click');
+  var iframe = document.getElementById('video-iframe');
+  iframe.src = 'https://player.bilibili.com/player.html?bvid=BV18pLw6FE5s&page=1&autoplay=1&high_quality=1';
+  document.getElementById('video-overlay').style.display = 'flex';
+}
+
+function closeVideo() {
+  document.getElementById('video-overlay').style.display = 'none';
+  var iframe = document.getElementById('video-iframe');
+  iframe.src = '';
+  AudioSystem.playSFX('click');
+}
+
+// ==================== 图片懒加载框架 ====================
+/**
+ * 图片懒加载观察器
+ * 当元素进入视口时加载 data-src 中的图片
+ * 所有图片占位已预留，后期替换时添加 data-src 属性即可启用
+ */
+function initLazyLoad() {
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const src = el.dataset.src;
+          if (src) {
+            el.src = src;
+            el.removeAttribute('data-src');
+            observer.unobserve(el);
+          }
+        }
+      });
+    }, { rootMargin: '50px' });
+
+    // 观察所有带 data-src 的图片（后期替换素材时使用）
+    document.querySelectorAll('img[data-src]').forEach(img => {
+      observer.observe(img);
+    });
+
+    console.log('[懒加载] 初始化完成，等待素材替换后自动启用');
+  }
+}
+
+// ==================== 初始化 ====================
+function init() {
+  console.log('╔══════════════════════════════════╗');
+  console.log('║   石家河玉语 H5 - 初始化完成      ║');
+  console.log('║   所有图片/音频/视频已预留占位    ║');
+  console.log('╚══════════════════════════════════╝');
+  console.log('');
+  console.log('📁 素材目录结构：');
+  console.log('  assets/');
+  console.log('    images/');
+  console.log('      cover/       - 封面素材');
+  console.log('      prologue/    - 序章素材');
+  console.log('      timeline/    - 时间轴场景插画(6张)');
+  console.log('      altar/       - 祭坛底图');
+  console.log('      artifacts/   - 文物细节图(5张)');
+  console.log('      album/       - 图鉴图标(5张)');
+  console.log('      puzzle/      - 拼图参考图(5档)');
+  console.log('      panorama/    - 长卷分段图(5段)');
+  console.log('      diy/         - DIY纹样/底版素材');
+  console.log('      final/       - 终章边框/合集图');
+  console.log('      beads/       - 小玉粒素材');
+  console.log('      ui/          - UI图标/装饰');
+  console.log('    audio/');
+  console.log('      bgm/         - 背景音乐(6首)');
+  console.log('      sfx/         - 音效文件(9个)');
+  console.log('    video/');
+  console.log("      chu_phoenix.mp4 - 文物视频介绍 · 石家河遗址");
+  console.log('');
+
+  // 生成封面粒子
+  generateCoverParticles();
+
+  // 绑定涟漪交互
+  bindRipples();
+
+  // 初始化音频
+  AudioSystem.init();
+
+  // 初始化懒加载
+  initLazyLoad();
+
+  // 更新指示器
+  updateBeadIndicator();
+  updateAlbumCount();
+
+  // 绑定全局触摸/点击关闭
+  document.addEventListener('click', function(e) {
+    // 点击DIY面板外部关闭
+    const diyPanel = document.getElementById('diy-panel');
+    if (diyPanel.classList.contains('show') &&
+        !diyPanel.contains(e.target) &&
+        !e.target.closest('[onclick*="toggleDIYPanel"]')) {
+      diyPanel.classList.remove('show');
+    }
+  });
+
+  // 监听窗口resize更新拼图
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (GameState.currentPage === 'page-puzzle' && PuzzleEngine.board) {
+        PuzzleEngine._boardRect = PuzzleEngine.board.getBoundingClientRect();
+      }
+    }, 300);
+  });
+
+  // 监听时间轴滚动（实时更新进度）
+  const timelineScroll = document.getElementById('timeline-scroll');
+  if (timelineScroll) {
+    timelineScroll.addEventListener('scroll', updateTimelineProgress);
+  }
+
+  // 监听全景滚动
+  const panoramaScroll = document.getElementById('panorama-scroll');
+  if (panoramaScroll) {
+    panoramaScroll.addEventListener('scroll', checkPanoramaProgress);
+  }
+
+  // 阻止全局默认的双指缩放和长按菜单
+  document.addEventListener('gesturestart', e => e.preventDefault());
+  document.addEventListener('gesturechange', e => e.preventDefault());
+  document.addEventListener('gestureend', e => e.preventDefault());
+  document.addEventListener('contextmenu', e => {
+    if (e.target.closest('.puzzle-piece')) e.preventDefault();
+  });
+}
+
+// 启动
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
